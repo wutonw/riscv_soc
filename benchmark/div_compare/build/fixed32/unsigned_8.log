@@ -1,0 +1,19 @@
+
+****** xsim v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Tue Oct 13 15:08:09 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source xsim.dir/div_compare_tb_snapshot/xsim_script.tcl
+# xsim {div_compare_tb_snapshot} -testplusarg ROM=D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/unsigned_8_rom.hex -testplusarg INIT=D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/unsigned_8_init.hex -testplusarg RAM=D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/unsigned_8_ram.hex -testplusarg REGS=D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/unsigned_8_regs.hex -testplusarg STORES=D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/unsigned_8_stores.hex -testplusarg REG_COUNT=2058 -testplusarg STORE_COUNT=513 -testplusarg RETIRED=2572 -testplusarg DONE_PC=10284 -autoloadwcfg -tclbatch {D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/fixed32/run.tcl} -onerror quit
+Time resolution is 1 ps
+source D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/build/fixed32/run.tcl
+## run all
+METRICS cycles=19985 retired=2572 divisions=512 stalls=17408 iterations=16384 latency_sum=17920 latency_min=35 latency_max=35
+PASS: division comparison, WB/store traces and all 8192 RAM words
+$finish called at time : 199886 ns : File "D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/div_compare_tb.sv" Line 116
+## quit
+INFO: [Common 17-206] Exiting xsim at Tue Oct 13 15:08:11 2026...

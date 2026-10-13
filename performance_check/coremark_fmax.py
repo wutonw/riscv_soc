@@ -1,4 +1,4 @@
-r"""Run CoreMark and calculate Fmax/CoreMark metrics for this RV32I project.
+r"""Run RV32IM CoreMark and calculate Fmax/CoreMark metrics for this project.
 
 The timing result is calculated from the constraint period and Vivado's WNS:
 
@@ -196,7 +196,7 @@ def main() -> int:
     if args.max_cycles < 1:
         raise ValueError("max-cycles must be positive")
     repo_root = Path(__file__).resolve().parent.parent
-    print("正在运行 CoreMark（10 次迭代），请稍候...", flush=True)
+    print("正在运行 CoreMark（RV32IM，10 次迭代），请稍候...", flush=True)
     output = run_coremark(repo_root, args.max_cycles)
     iterations, timed_cycles, coremark_per_mhz = parse_coremark_output(output)
     if iterations != 10:

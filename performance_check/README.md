@@ -6,8 +6,8 @@ uses the project's `.venv\Scripts\python.exe` and puts it first on `PATH`.
 
 The launcher runs the RTL stress gate first, then 10 CoreMark iterations.
 Both use Vivado XSim and the actual generated multiplier IP model.
-CoreMark is built with `-O2 -march=rv32i_zmmul -mabi=ilp32`: hardware multiply,
-software division, no unsupported DIV/REM instructions.
+CoreMark is built with `-O2 -march=rv32im -mabi=ilp32`: hardware multiply,
+divide and remainder. All eight RV32M instructions are tested before CoreMark.
 After CoreMark passes CRC validation, it asks for the clock constraint period
 (default 10 ns) and WNS. The only final metrics are Fmax, CoreMark/MHz, and
 CoreMark at Fmax. You can pass `--period-ns` and `--wns-ns` to avoid prompts.
@@ -17,9 +17,11 @@ results, four resets during execution, branch/JAL wrong-path guards, existing
 forwarding and memory tests, CSR WB-commit/forwarding checks, a misaligned-load
 trap with a younger CSR write that must be flushed, and firmware checks for 12
 traps and 12 returns.
-The gate also runs `tb/mul_dsp_stress/run.py`: four multiplication operations,
-dependent chains, load/store/branch/CSR forwarding, reset during multiply,
-and 19 trap/MRET/flush ordering cases. Tests and their generated files stay
+The gate also runs `tb/mul_dsp_stress/run.py`: MUL/MULH/MULHSU/MULHU and
+DIV/DIVU/REM/REMU, including divide-by-zero, signed overflow, signed remainder,
+dependent and mixed multiply/divide chains, load/store/branch/CSR forwarding,
+input changes while division waits, invalid/canceled operations, active-M reset,
+and 38 trap/MRET/flush ordering cases. Tests and their generated files stay
 under `tb/`, not in this CoreMark folder. Any failed check stops CoreMark.
 
 Required tools on `PATH`: RISC-V GCC, binutils and PowerShell. The launcher
@@ -29,6 +31,8 @@ IP latency and simulator library version are read from the generated IP,
 not fixed to one pipeline stage. Changing `PIPELINE_STAGE` in the core and
 the IP's Pipeline Stages together, then regenerating IP output products,
 is sufficient; stale/mismatched configurations fail before simulation.
+Division latency is checked independently and does not assume the multiplier's
+pipeline depth. After changing RTL, supply WNS from a fresh implementation report.
 
 Logs are under `build/precoremark_xsim`, `tb/mul_dsp_stress/build`, and
 `benchmark/coremark/build/xsim`. The scripts refer to the project's RTL,

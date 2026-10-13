@@ -43,7 +43,8 @@ Compiling architecture xilinx of entity mult_gen_v12_0_25.dsp [\dsp(c_xdevicefam
 Compiling architecture xilinx of entity mult_gen_v12_0_25.mult_gen_v12_0_25_viv [\mult_gen_v12_0_25_viv(c_verbosi...]
 Compiling architecture xilinx of entity mult_gen_v12_0_25.mult_gen_v12_0_25 [\mult_gen_v12_0_25(c_xdevicefami...]
 Compiling architecture mult_gen_0_arch of entity work.mult_gen_0 [mult_gen_0_default]
-Compiling module work.m_ext(PIPELINE_STAGE=32'b010)
+Compiling module work.div
+Compiling module work.m_ext_default
 Compiling module work.pipe_ex_mem
 Compiling module work.ram
 Compiling module work.pipe_mem_wb

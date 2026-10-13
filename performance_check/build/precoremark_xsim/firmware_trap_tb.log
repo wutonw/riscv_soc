@@ -3,7 +3,7 @@
   **** SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
   **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
   **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
-  **** Start of session at: Fri Oct  9 21:00:33 2026
+  **** Start of session at: Tue Oct 13 14:45:21 2026
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 
@@ -53,4 +53,4 @@ PASS: all 12 firmware Trap tests passed
       signature=600dcafe count=12 traps=12 mrets=12 cycles=4297
 $finish called at time : 43036 ns : File "D:/aaa1verilog_project/rv32i_soc/tb/firmware_trap_tb.v" Line 141
 ## quit
-INFO: [Common 17-206] Exiting xsim at Fri Oct  9 21:00:36 2026...
+INFO: [Common 17-206] Exiting xsim at Tue Oct 13 14:45:24 2026...

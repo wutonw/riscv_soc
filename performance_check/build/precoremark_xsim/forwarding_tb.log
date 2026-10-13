@@ -3,7 +3,7 @@
   **** SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
   **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
   **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
-  **** Start of session at: Fri Oct  9 21:00:07 2026
+  **** Start of session at: Tue Oct 13 14:44:55 2026
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
 
@@ -45,4 +45,4 @@ OK      repeat_lw_add RAM[69]=0000000b
 PASS: all forwarding tests passed
 $finish called at time : 1236 ns : File "D:/aaa1verilog_project/rv32i_soc/tb/forwarding_tb.v" Line 204
 ## quit
-INFO: [Common 17-206] Exiting xsim at Fri Oct  9 21:00:09 2026...
+INFO: [Common 17-206] Exiting xsim at Tue Oct 13 14:44:57 2026...

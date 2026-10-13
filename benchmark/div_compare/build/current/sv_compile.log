@@ -1,0 +1,5 @@
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/aaa1verilog_project/rv32i_soc/src/core/m_ext.sv" into library work
+INFO: [VRFC 10-311] analyzing module m_ext
+INFO: [VRFC 10-311] analyzing module div
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/aaa1verilog_project/rv32i_soc/benchmark/div_compare/div_compare_tb.sv" into library work
+INFO: [VRFC 10-311] analyzing module div_compare_tb

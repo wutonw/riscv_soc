@@ -15,7 +15,7 @@ module cpu_core(
     assign inst_addr = pc;
     assign prom_ce = !stall;
     assign stall = csr_ex_load_use_hazard || store_load_use_hazard || load_use_hazard ||
-                    csr_mem_load_use_hazard || ex_m_ext_dsp_stall;
+                    csr_mem_load_use_hazard || ex_m_ext_stall;
     // ==================================================
     // IF Stage
     wire load_use_bubble =!store_load_use_hazard && (load_use_hazard || csr_ex_load_use_hazard);
@@ -23,7 +23,7 @@ module cpu_core(
     wire if_id_flush = branch_if_id_flush || trap_if_id_flush || trap_mret_if_id_flush;
     wire id_ex_flush = branch_id_ex_flush || load_use_bubble || trap_id_ex_flush || 
                         trap_mret_id_ex_flush ||csr_mem_load_use_hazard;
-    wire ex_mem_flush = store_load_use_hazard || trap_ex_mem_flush || ex_m_ext_dsp_stall;
+    wire ex_mem_flush = store_load_use_hazard || trap_ex_mem_flush || ex_m_ext_stall;
     wire mem_wb_flush = trap_mem_wb_flush;
     //flush and next_pc logic
     reg branch_if_id_flush;
@@ -445,7 +445,7 @@ module cpu_core(
         .op2(op2),
         .alu_result(ex_alu_result)
     );
-    wire ex_m_ext_dsp_stall;
+    wire ex_m_ext_stall;
     m_ext #(
         .PIPELINE_STAGE(2)
     ) u_m_ext (
@@ -457,7 +457,7 @@ module cpu_core(
         .op1(op1),
         .op2(op2),
         .m_ext_result(ex_m_ext_result),
-        .m_ext_dsp_stall(ex_m_ext_dsp_stall)
+        .m_ext_stall(ex_m_ext_stall)
     );
 
     reg branch_taken;

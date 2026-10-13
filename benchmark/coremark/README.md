@@ -1,7 +1,7 @@
 # CoreMark 裸机移植
 
 `official/` 中是 EEMBC CoreMark 官方核心源码，保留其 Apache-2.0 许可证。
-本目录只增加了当前 RV32I 哈佛结构需要的启动代码、链接脚本、端口和 testbench。
+本目录只增加了当前 RV32IM 哈佛结构需要的启动代码、链接脚本、端口和 testbench。
 
 运行：
 
@@ -12,7 +12,8 @@ powershell -ExecutionPolicy Bypass -File benchmark/coremark/run.ps1
 当前默认运行 1 次迭代，用于 RTL 功能验证和性能估算。testbench 在 CoreMark 的
 `start_time()`/`stop_time()` 标记之间统计真实周期，并由官方 CRC 校验决定 PASS。
 当前使用 Vivado XSim 和实际生成的乘法 IP，编译参数为
-`-O2 -march=rv32i_zmmul -mabi=ilp32`，启用硬件乘法但不生成 DIV/REM。
+`-O2 -march=rv32im -mabi=ilp32`，启用硬件乘法、除法和取余。
+旧 `rv32i_zmmul` 成绩使用软件除法，比较版本时应同时记录 ISA 和编译参数。
 
 按当前单次实测周期，在 100 MHz 下模拟至少 10 秒的长测：
 
@@ -20,7 +21,7 @@ powershell -ExecutionPolicy Bypass -File benchmark/coremark/run.ps1
 powershell -ExecutionPolicy Bypass -File benchmark/coremark/run_10s.ps1
 ```
 
-默认迭代数按旧版每次周期估算；更改核或启用硬件乘法后，应重新测量并通过
+默认迭代数按旧版每次周期估算；更改核或启用硬件乘除法后，应重新测量并通过
 `-CyclesPerIteration` 更新估计。这类 XSim 长测可能需要数小时，期间会
 每 5000 万周期打印一次进度。可用 `-ClockMHz` 指定计划使用的板级时钟频率。
 

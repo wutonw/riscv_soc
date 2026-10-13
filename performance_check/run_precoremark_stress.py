@@ -1,6 +1,6 @@
 """Fail-fast regression gate for the CoreMark/Fmax launcher.
 
-The original six benches and the multiplication suite use the current core
+The original six benches and the full RV32M suite use the current core
 with its actual generated Vivado IP model.
 """
 
@@ -45,11 +45,11 @@ def main() -> int:
         project.simulate(name, [], marker)
         print(f"[stress] PASS {name}", flush=True)
     python = sys.executable
-    mul_runner = ROOT / "tb" / "mul_dsp_stress" / "run.py"
-    print("[stress] Running multiplier/IP, forwarding, memory, CSR and trap regression...", flush=True)
-    result = subprocess.run([python, str(mul_runner)], cwd=ROOT)
+    m_runner = ROOT / "tb" / "mul_dsp_stress" / "run.py"
+    print("[stress] Running RV32M multiply/divide, IP, forwarding, memory, CSR and trap regression...", flush=True)
+    result = subprocess.run([python, str(m_runner)], cwd=ROOT)
     if result.returncode != 0:
-        raise RuntimeError("multiplier/IP regression failed")
+        raise RuntimeError("RV32M multiplier/divider regression failed")
     print("[stress] Current RTL/IP regression passed. Starting CoreMark.\n", flush=True)
     return 0
 

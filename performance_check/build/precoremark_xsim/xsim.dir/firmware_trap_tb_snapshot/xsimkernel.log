@@ -1,7 +1,7 @@
-Running: xsim.dir/firmware_trap_tb_snapshot/xsimk.exe -simmode gui -wdb firmware_trap_tb_snapshot.wdb -simrunnum 0 -socket 16828
+Running: xsim.dir/firmware_trap_tb_snapshot/xsimk.exe -simmode gui -wdb firmware_trap_tb_snapshot.wdb -simrunnum 0 -socket 60852
 Design successfully loaded
 Design Loading Memory Usage: 21688 KB (Peak: 21688 KB)
-Design Loading CPU Usage: 140 ms
+Design Loading CPU Usage: 155 ms
 Simulation completed
-Simulation Memory Usage: 23208 KB (Peak: 23208 KB)
-Simulation CPU Usage: 936 ms
+Simulation Memory Usage: 23276 KB (Peak: 23276 KB)
+Simulation CPU Usage: 999 ms

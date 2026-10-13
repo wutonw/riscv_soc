@@ -1,5 +1,6 @@
 INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/aaa1verilog_project/rv32i_soc/src/core/m_ext.sv" into library work
 INFO: [VRFC 10-311] analyzing module m_ext
+INFO: [VRFC 10-311] analyzing module div
 INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/aaa1verilog_project/rv32i_soc/performance_check/pipeline_long_stress_tb.v" into library work
 INFO: [VRFC 10-311] analyzing module pipeline_long_stress_tb
 INFO: [VRFC 10-2263] Analyzing SystemVerilog file "D:/aaa1verilog_project/rv32i_soc/performance_check/csr_commit_trap_stress_tb.v" into library work

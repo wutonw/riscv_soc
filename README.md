@@ -1,4 +1,4 @@
-# RV32IM FPGA 软核
+# riscv_soc：RV32IM FPGA 软核
 
 基于 Verilog/SystemVerilog 的 32 位 RISC-V 顺序流水线软核。当前主工程使用 Vivado，
 目标器件为 `xc7z020clg400-2`。这是持续迭代的学习项目，已实现硬件乘法、除法和取余。
@@ -27,8 +27,8 @@ M 扩展单元 `src/core/m_ext.sv` 的乘法使用 Xilinx `mult_gen_0` IP，目�
 src/core/             CPU、流水线寄存器、译码、乘除法、CSR、Trap 和 RAM 控制
 src/periph/           数据 RAM、去抖及保留的厂商 ROM 文件
 src/top.v             FPGA 顶层、板测故障监控及当前 Xilinx ROM
-proj_xilinx/rv32i_soc/rv32i_soc.xpr   当前 Vivado 工程
-proj_gowwin/          保留的 Gowin 工程，当前不可用，尚未适配乘法 IP
+proj_xilinx/riscv_soc/riscv_soc.xpr   当前 Vivado 工程
+proj_gowwin/riscv_soc.gprj           保留的 Gowin 工程，尚未适配乘法 IP
 firmware/             裸机 C、启动/Trap 代码及板测汇编和 HEX
 tb/                   定向 testbench、流水线/CSR/Trap/乘除法压力测试
 performance_check/    压力测试门禁与 CoreMark/Fmax 检查入口
@@ -38,8 +38,8 @@ benchmark/div_compare/ LOD 与固定 32 次迭代除法的整核对比测试
 
 ## Vivado 上板
 
-打开 `proj_xilinx/rv32i_soc/rv32i_soc.xpr`，顶层为 `top`，约束文件为
-`proj_xilinx/rv32i_soc/rv32i_soc.srcs/constrs_2/new/top.xdc`。当前顶层选择了
+打开 `proj_xilinx/riscv_soc/riscv_soc.xpr`，顶层为 `top`，约束文件为
+`proj_xilinx/riscv_soc/riscv_soc.srcs/constrs_2/new/top.xdc`。当前顶层选择了
 `FPGA_XILINX`，实例化 `board_stress_rom`：通过 `$readmemh` 从
 `firmware/board_stress.hex` 初始化推断的 Block RAM。工程中仍保留
 `xilinx_inst_rom.v` 和 Block Memory Generator IP，但**当前顶层没有使用它们**，

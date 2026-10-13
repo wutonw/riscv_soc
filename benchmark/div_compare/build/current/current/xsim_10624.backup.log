@@ -1,0 +1,33 @@
+#-----------------------------------------------------------
+# xsim v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Tue Oct 13 15:56:35 2026
+# Process ID         : 10624
+# Current directory  : D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/current
+# Command line       : xsim.exe -mode tcl -source {xsim.dir/div_compare_tb_snapshot/xsim_script.tcl}
+# Log file           : D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/current/xsim.log
+# Journal file       : D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/current\xsim.jou
+# Running On         : 1c
+# Platform           : Windows 11
+# Operating System   : 26100
+# Processor Detail   : Intel(R) Core(TM) i9-14900HX
+# CPU Frequency      : 2419 MHz
+# CPU Physical cores : 24
+# CPU Logical cores  : 32
+# Host memory        : 34070 MB
+# Swap memory        : 6979 MB
+# Total Virtual      : 41049 MB
+# Available Virtual  : 10715 MB
+#-----------------------------------------------------------
+source xsim.dir/div_compare_tb_snapshot/xsim_script.tcl
+# xsim {div_compare_tb_snapshot} -testplusarg ROM=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/forward_load_store_csr_rom.hex -testplusarg INIT=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/forward_load_store_csr_init.hex -testplusarg RAM=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/forward_load_store_csr_ram.hex -testplusarg REGS=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/forward_load_store_csr_regs.hex -testplusarg STORES=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/forward_load_store_csr_stores.hex -testplusarg REG_COUNT=114 -testplusarg STORE_COUNT=33 -testplusarg RETIRED=156 -testplusarg DONE_PC=620 -autoloadwcfg -tclbatch {D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/current/run.tcl} -onerror quit
+Time resolution is 1 ps
+source D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/current/run.tcl
+## run all
+METRICS cycles=451 retired=156 divisions=24 stalls=274 iterations=226 latency_sum=298 latency_min=4 latency_max=19
+PASS: division comparison, WB/store traces and all 8192 RAM words
+$finish called at time : 4546 ns : File "D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/div_compare_tb.sv" Line 116
+## quit
+INFO: [Common 17-206] Exiting xsim at Tue Oct 13 15:56:37 2026...

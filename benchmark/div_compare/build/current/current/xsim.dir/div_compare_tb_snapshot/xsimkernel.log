@@ -1,0 +1,7 @@
+Running: xsim.dir/div_compare_tb_snapshot/xsimk.exe -simmode gui -testplusarg ROM=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/euclid_gcd_16_rom.hex -testplusarg INIT=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/euclid_gcd_16_init.hex -testplusarg RAM=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/euclid_gcd_16_ram.hex -testplusarg REGS=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/euclid_gcd_16_regs.hex -testplusarg STORES=D:/aaa1verilog_project/riscv_soc/benchmark/div_compare/build/current/euclid_gcd_16_stores.hex -testplusarg REG_COUNT=257 -testplusarg STORE_COUNT=9 -testplusarg RETIRED=336 -testplusarg DONE_PC=364 -wdb div_compare_tb_snapshot.wdb -simrunnum 0 -socket 24457
+Design successfully loaded
+Design Loading Memory Usage: 22388 KB (Peak: 22388 KB)
+Design Loading CPU Usage: 77 ms
+Simulation completed
+Simulation Memory Usage: 23456 KB (Peak: 23456 KB)
+Simulation CPU Usage: 124 ms

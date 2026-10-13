@@ -96,7 +96,7 @@ module board_stress_rom(
 );
     (* rom_style = "block" *) reg [31:0] words [0:8191];
 
-    initial $readmemh("D:/aaa1verilog_project/rv32i_soc/firmware/board_stress.hex", words);
+    initial $readmemh("D:/aaa1verilog_project/riscv_soc/firmware/board_stress.hex", words);
     always @(posedge clk) begin
         if (ce) inst <= words[addr];
     end

@@ -8,7 +8,8 @@ module cpu_core(
 
     input wire [31:0] inst,
     output wire [31:0] inst_addr,
-    output wire prom_ce
+    output wire prom_ce,
+    output wire tx
 );
 
     wire stall;
@@ -607,13 +608,23 @@ module cpu_core(
     wire [3:0] mem_ram_s_we = ex_mem_valid ? tmp_ram_s_we : 4'b0000;
     wire [31:0] mem_raw_ram_r_data;
     reg [31:0] mem_ram_r_data;
-    ram u_ram(
+    // ram u_ram(
+    //     .clk(clk),
+    //     .we(mem_ram_s_we),
+    //     .rd_addr(ex_addr_result),//提前吃地址
+    //     .wr_addr(ex_mem_alu_result),
+    //     .ram_w_data(mem_ram_w_data),
+    //     .ram_r_data(mem_raw_ram_r_data)
+    // );
+    mmio_decode u_mmio_decode(
         .clk(clk),
-        .we(mem_ram_s_we),
-        .rd_addr(ex_addr_result),//提前吃地址
-        .wr_addr(ex_mem_alu_result),
-        .ram_w_data(mem_ram_w_data),
-        .ram_r_data(mem_raw_ram_r_data)
+        .rst_n(rst_n),
+        .mem_ram_s_we(mem_ram_s_we),
+        .ex_addr_result(ex_addr_result),
+        .ex_mem_alu_result(ex_mem_alu_result),
+        .mem_ram_w_data(mem_ram_w_data),
+        .mem_raw_ram_r_data(mem_raw_ram_r_data),
+        .tx(tx)
     );
     wire store_forward = ex_mem_valid && mem_wb_valid && ex_mem_is_store && (ex_mem_rs2_addr == mem_wb_rd_addr) && (mem_wb_rd_addr != 0) && wb_wr_en;
     wire [31:0] mem_store_data = (store_forward)? wb_wr_data : mem_rs2_data;

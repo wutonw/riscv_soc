@@ -5,8 +5,9 @@
 module top(
     input wire raw_rst_n,
     input wire clk,
-    output wire led
+    output wire led,
 
+    output wire tx
 );
     wire rst_n;
     wire [31:0] inst_addr;
@@ -46,44 +47,31 @@ module top(
 
     wire [31:0] pc;
     cpu_core u_cpu_core(
-        .clk      (clk),
-        .rst_n    (rst_n),
+        .clk(clk),
+        .rst_n(rst_n),
         .pc (pc),
-        .inst     (inst),
+        .inst(inst),
         .inst_addr(inst_addr),
-        .prom_ce  (prom_ce)
+        .prom_ce(prom_ce),
+        .tx(tx)
     );
 
-    localparam [31:0] LOOP_PC = 32'h0000_0028;
-    localparam [31:0] FAIL_PC = 32'h0000_023c;
+    // Addresses exported by firmware/board_stress_c.c.
+    // A failing image parks at board_fail; a passing image parks at board_pass.
+    localparam [31:0] FAIL_PC = 32'h0000_0154;
     reg failure_latched;
-    reg [2:0] fail_visits;
-    reg [19:0] heartbeat_count;
-    reg [25:0] blink_count;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             failure_latched <= 1'b0;
-            fail_visits <= 3'b0;
-            heartbeat_count <= 20'b0;
-            blink_count <= 26'b0;
         end else begin
-            if (blink_count == 26'd49_999_999) blink_count <= 26'b0;
-            else blink_count <= blink_count + 1'b1;
-
-            if (pc == LOOP_PC) begin
-                heartbeat_count <= 20'b0;
-                fail_visits <= 3'b0;
-            end else begin
-                if (!(&heartbeat_count)) heartbeat_count <= heartbeat_count + 1'b1;
-                if (pc == FAIL_PC && !(&fail_visits)) fail_visits <= fail_visits + 1'b1;
-            end
-
-            if (fail_visits >= 3'd3 || (&heartbeat_count)) failure_latched <= 1'b1;
+            if (pc == FAIL_PC)
+                failure_latched <= 1'b1;
         end
     end
 
-    assign led = rst_n && !failure_latched && (blink_count < 26'd2_000_000);
+    // LED on means the test reached the failure park loop; pass stays dark.
+    assign led = rst_n && failure_latched;
 
 endmodule
 

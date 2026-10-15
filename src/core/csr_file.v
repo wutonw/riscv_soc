@@ -24,6 +24,18 @@ module csr_file(
     reg [31:0] mstatus;
     reg [31:0] mcause;
     reg [31:0] mie;
+    reg [63:0] mcycle;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            mcycle <= 64'd0;
+        end else if (csr_we && csr_w_addr == 12'hB00) begin
+            mcycle[31:0] <= csr_w_data;
+        end else if (csr_we && csr_w_addr == 12'hB80) begin
+            mcycle[63:32] <= csr_w_data;
+        end else begin
+            mcycle <= mcycle + 1'b1;
+        end
+    end
 
     assign mepc_out = mepc;
     assign trap_vector = mtvec;
@@ -36,6 +48,10 @@ module csr_file(
             12'h305: csr_r_data = mtvec;
             12'h341: csr_r_data = mepc;
             12'h342: csr_r_data = mcause;
+            12'hB00: csr_r_data = mcycle[31:0];
+            12'hB80: csr_r_data = mcycle[63:32];
+            12'hC00: csr_r_data = mcycle[31:0];
+            12'hC80: csr_r_data = mcycle[63:32];
             default: csr_r_data = 32'h0;
         endcase
     end

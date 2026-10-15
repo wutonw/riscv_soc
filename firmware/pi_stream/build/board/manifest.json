@@ -1,0 +1,23 @@
+{
+  "clock_hz": 100000000,
+  "uart_baud": 115200,
+  "report_cycles": 300000000,
+  "rom_bytes": 2096,
+  "ram_init_bytes": 169,
+  "symbols": {
+    "_start": 0,
+    "pi_trap": 72,
+    "puts": 88,
+    "print_u32": 320,
+    "pi_trap_fail": 528,
+    "pi_fail_park": 620,
+    "main": 624,
+    "board_init_data": 1588,
+    "random_state": 20648,
+    "__bss_start": 20652,
+    "tx_started": 20652,
+    "last_tx_cycle": 20656,
+    "__bss_end": 20660,
+    "__stack_top": 32512
+  }
+}

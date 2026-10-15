@@ -1,0 +1,80 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ROM              0x00000000         0x00008000         xr
+DATA             0x00005000         0x00002000         rw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+LOAD C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+LOAD C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+LOAD D:/xpack-riscv-none-elf-gcc-15.2.0-1/bin/../lib/gcc/riscv-none-elf/15.2.0/rv32im/ilp32\libgcc.a
+
+.text           0x00000000      0x61c
+ *(.text.start)
+ .text.start    0x00000000       0x48 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+                0x00000000                _start
+ *(.text .text.*)
+ .text          0x00000048       0x10 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+ .text          0x00000058      0x20c C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+                0x00000204                pi_trap_fail
+                0x00000260                pi_fail_park
+ .text.startup  0x00000264      0x3b4 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+                0x00000264                main
+ .text          0x00000618        0x0 C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+ *(.board_init)
+ .board_init    0x00000618        0x4 C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+                0x00000618                board_init_data
+
+.rodata         0x00005000       0xa5 load address 0x00010000
+ *(.rodata .rodata.*)
+ .rodata.str1.4
+                0x00005000       0xa5 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+                                 0xa1 (size before relaxing)
+
+.rela.dyn       0x000050a8        0x0 load address 0x000100a8
+ .rela.text.start
+                0x000050a8        0x0 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+
+.data           0x000050a8        0x4 load address 0x000100a5
+ *(.data .data.* .sdata .sdata.*)
+ .data          0x000050a8        0x0 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+ .data          0x000050a8        0x4 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+ .data          0x000050ac        0x0 C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+                0x000050ac                        . = ALIGN (0x4)
+
+.bss            0x000050ac        0x8 load address 0x000100ac
+                0x000050ac                        __bss_start = .
+ *(.bss .bss.* .sbss .sbss.* COMMON)
+ .bss           0x000050ac        0x0 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+ .bss           0x000050ac        0x8 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+ .bss           0x000050b4        0x0 C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+                0x000050b4                        . = ALIGN (0x4)
+                0x000050b4                        __bss_end = .
+                0x00007f00                        __stack_top = 0x7f00
+                0x00000001                        ASSERT ((SIZEOF (.text) <= 0x8000), pi image exceeds 32KiB instruction ROM)
+                0x00000001                        ASSERT ((__bss_end <= 0x7000), pi data overlaps stack)
+OUTPUT(D:\aaa1verilog_project\riscv_soc\firmware\pi_stream\build\smoke\probe.elf elf32-littleriscv)
+
+.riscv.attributes
+                0x00000000       0x37
+ .riscv.attributes
+                0x00000000       0x35 C:\Users\wuton\AppData\Local\Temp\ccaeAQ1b.o
+ .riscv.attributes
+                0x00000035       0x33 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+ .riscv.attributes
+                0x00000068       0x31 C:\Users\wuton\AppData\Local\Temp\ccafjVej.o
+
+.comment        0x00000000       0x33
+ .comment       0x00000000       0x33 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o
+                                 0x34 (size before relaxing)
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 C:\Users\wuton\AppData\Local\Temp\cc7PK72b.o

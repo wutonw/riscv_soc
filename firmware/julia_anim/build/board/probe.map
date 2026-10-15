@@ -1,0 +1,82 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ROM              0x00000000         0x00008000         xr
+DATA             0x00005000         0x00002000         rw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+LOAD C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+LOAD C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+LOAD D:/xpack-riscv-none-elf-gcc-15.2.0-1/bin/../lib/gcc/riscv-none-elf/15.2.0/rv32im/ilp32\libgcc.a
+
+.text           0x00000000      0x748
+ *(.text.start)
+ .text.start    0x00000000       0x48 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+                0x00000000                _start
+ *(.text .text.*)
+ .text          0x00000048       0x10 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+ .text          0x00000058      0x264 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+                0x00000260                julia_trap_fail
+                0x000002b8                julia_fail_park
+ .text.startup  0x000002bc      0x488 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+                0x000002bc                main
+ .text          0x00000744        0x0 C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+ *(.board_init)
+ .board_init    0x00000744        0x4 C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+                0x00000744                board_init_data
+
+.rodata         0x00005000       0x63 load address 0x00010000
+ *(.rodata .rodata.*)
+ .rodata.str1.4
+                0x00005000       0x58 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+                                 0x54 (size before relaxing)
+ .rodata        0x00005058        0xb C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+
+.rela.dyn       0x00005064        0x0 load address 0x00010064
+ .rela.text.start
+                0x00005064        0x0 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+
+.data           0x00005063        0x1 load address 0x00010063
+ *(.data .data.* .sdata .sdata.*)
+ .data          0x00005063        0x0 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+ .data          0x00005063        0x0 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+ .data          0x00005063        0x0 C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+                0x00005064                        . = ALIGN (0x4)
+ *fill*         0x00005063        0x1 
+
+.bss            0x00005064        0x8 load address 0x00010064
+                0x00005064                        __bss_start = .
+ *(.bss .bss.* .sbss .sbss.* COMMON)
+ .bss           0x00005064        0x0 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+ .bss           0x00005064        0x8 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+ .bss           0x0000506c        0x0 C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+                0x0000506c                        . = ALIGN (0x4)
+                0x0000506c                        __bss_end = .
+                0x00007f00                        __stack_top = 0x7f00
+                0x00000001                        ASSERT ((SIZEOF (.text) <= 0x8000), Julia image exceeds 32KiB instruction ROM)
+                0x00000001                        ASSERT ((__bss_end <= 0x7000), Julia data overlaps stack)
+OUTPUT(D:\aaa1verilog_project\riscv_soc\firmware\julia_anim\build\board\probe.elf elf32-littleriscv)
+
+.riscv.attributes
+                0x00000000       0x37
+ .riscv.attributes
+                0x00000000       0x35 C:\Users\wuton\AppData\Local\Temp\cc23NV8I.o
+ .riscv.attributes
+                0x00000035       0x33 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+ .riscv.attributes
+                0x00000068       0x31 C:\Users\wuton\AppData\Local\Temp\ccyY1M6J.o
+
+.comment        0x00000000       0x33
+ .comment       0x00000000       0x33 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o
+                                 0x34 (size before relaxing)
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 C:\Users\wuton\AppData\Local\Temp\ccwIk93F.o

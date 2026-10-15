@@ -213,7 +213,9 @@ module decoder(
                         default: illegal_inst = 1;
                     endcase
                 end else begin
-                    if(funct3 != 3'b100 && funct3 != 3'b0 && csr_valid)begin
+                    if(!csr_valid || (csr_readonly && csr_write_attempt))begin
+                        illegal_inst = 1;
+                    end else begin
                         //csr
                         is_csr = 1;
                         if (funct3 == 3'b001 || funct3 == 3'b101)
@@ -222,8 +224,6 @@ module decoder(
                             csr_we = (rs1_addr != 5'b0);
                         wr_en = 1;
                         wb_sel = 2'b11;
-                    end else begin
-                        illegal_inst = 1;
                     end
                 end
             end
@@ -231,12 +231,25 @@ module decoder(
         endcase
     end
 
-    always @(*)begin
+    always @(*) begin
         csr_valid = 0;
-        if(csr_addr == 12'h300 || csr_addr == 12'h304 || csr_addr == 12'h305 || csr_addr == 12'h341 || csr_addr == 12'h342)begin
+        if (csr_addr == 12'h300 || // mstatus
+            csr_addr == 12'h304 || // mie
+            csr_addr == 12'h305 || // mtvec
+            csr_addr == 12'h341 || // mepc
+            csr_addr == 12'h342 || // mcause
+            csr_addr == 12'hB00 || // mcycle
+            csr_addr == 12'hB80 || // mcycleh
+            csr_addr == 12'hC00 || // cycle
+            csr_addr == 12'hC80) begin // cycleh
             csr_valid = 1;
         end
-
     end
+    wire csr_readonly = (csr_addr == 12'hC00) ||  (csr_addr == 12'hC80);
+    wire csr_write_attempt =
+        (funct3 == 3'b001) ||  // CSRRW
+        (funct3 == 3'b101) ||  // CSRRWI
+        ((funct3 == 3'b010 || funct3 == 3'b011) && (rs1_addr != 5'd0)) || // CSRRS / CSRRC
+        ((funct3 == 3'b110 || funct3 == 3'b111) && (rs1_addr != 5'd0)); // CSRRSI / CSRRCI
 
 endmodule

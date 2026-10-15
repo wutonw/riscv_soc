@@ -1,0 +1,24 @@
+{
+  "clock_hz": 100000000,
+  "uart_baud": 1000000,
+  "frame_cycles": 100000,
+  "rom_bytes": 2128,
+  "ram_init_bytes": 120,
+  "symbols": {
+    "_start": 0,
+    "square_trap": 72,
+    "putc": 88,
+    "print_u32": 164,
+    "puts": 368,
+    "square_trap_fail": 592,
+    "square_fail_park": 680,
+    "main": 684,
+    "board_init_data": 1780,
+    "sine_quarter": 20564,
+    "__bss_start": 20600,
+    "tx_started": 20600,
+    "last_tx_cycle": 20604,
+    "__bss_end": 20608,
+    "__stack_top": 32512
+  }
+}

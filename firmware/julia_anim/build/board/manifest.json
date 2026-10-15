@@ -1,0 +1,24 @@
+{
+  "clock_hz": 100000000,
+  "uart_baud": 115200,
+  "frame_cycles": 100000000,
+  "rom_bytes": 2156,
+  "ram_init_bytes": 100,
+  "symbols": {
+    "_start": 0,
+    "julia_trap": 72,
+    "putc": 88,
+    "print_u32": 168,
+    "puts": 376,
+    "julia_trap_fail": 608,
+    "julia_fail_park": 696,
+    "main": 700,
+    "board_init_data": 1860,
+    "shades.0": 20568,
+    "__bss_start": 20580,
+    "tx_started": 20580,
+    "last_tx_cycle": 20584,
+    "__bss_end": 20588,
+    "__stack_top": 32512
+  }
+}

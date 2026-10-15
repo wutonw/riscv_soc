@@ -27,7 +27,7 @@ module uart_top(
     );
 
     uart_tx #(
-        .CLK_FREQ(50_000_000),
+        .CLK_FREQ(100_000_000),
         .BAUD_RATE(115200)
     ) u_uart_tx (
         .clk(clk),

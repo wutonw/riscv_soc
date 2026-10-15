@@ -1,0 +1,82 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ROM              0x00000000         0x00008000         xr
+DATA             0x00005000         0x00002000         rw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+LOAD C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+LOAD C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+LOAD D:/xpack-riscv-none-elf-gcc-15.2.0-1/bin/../lib/gcc/riscv-none-elf/15.2.0/rv32im/ilp32\libgcc.a
+
+.text           0x00000000      0x88c
+ *(.text.start)
+ .text.start    0x00000000       0x48 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+                0x00000000                _start
+ *(.text .text.*)
+ .text          0x00000048       0x10 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+ .text          0x00000058      0x264 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+                0x00000260                square_trap_fail
+                0x000002b8                square_fail_park
+ .text.startup  0x000002bc      0x474 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+                0x000002bc                main
+ .text          0x00000730        0x0 C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+ *(.board_init)
+ .board_init    0x00000730      0x15c C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+                0x00000730                board_init_data
+
+.rodata         0x00005000       0x76 load address 0x00010000
+ *(.rodata .rodata.*)
+ .rodata.str1.4
+                0x00005000       0x54 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+                                 0x50 (size before relaxing)
+ .rodata        0x00005054       0x22 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+
+.rela.dyn       0x00005078        0x0 load address 0x00010078
+ .rela.text.start
+                0x00005078        0x0 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+
+.data           0x00005076        0x2 load address 0x00010076
+ *(.data .data.* .sdata .sdata.*)
+ .data          0x00005076        0x0 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+ .data          0x00005076        0x0 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+ .data          0x00005076        0x0 C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+                0x00005078                        . = ALIGN (0x4)
+ *fill*         0x00005076        0x2 
+
+.bss            0x00005078        0x8 load address 0x00010078
+                0x00005078                        __bss_start = .
+ *(.bss .bss.* .sbss .sbss.* COMMON)
+ .bss           0x00005078        0x0 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+ .bss           0x00005078        0x8 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+ .bss           0x00005080        0x0 C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+                0x00005080                        . = ALIGN (0x4)
+                0x00005080                        __bss_end = .
+                0x00007f00                        __stack_top = 0x7f00
+                0x00000001                        ASSERT ((SIZEOF (.text) <= 0x8000), Square image exceeds 32KiB instruction ROM)
+                0x00000001                        ASSERT ((__bss_end <= 0x7000), Square data overlaps stack)
+OUTPUT(D:\aaa1verilog_project\riscv_soc\firmware\square_anim\build\board\square_anim.elf elf32-littleriscv)
+
+.riscv.attributes
+                0x00000000       0x37
+ .riscv.attributes
+                0x00000000       0x35 C:\Users\wuton\AppData\Local\Temp\cc4RZYew.o
+ .riscv.attributes
+                0x00000035       0x33 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+ .riscv.attributes
+                0x00000068       0x31 C:\Users\wuton\AppData\Local\Temp\ccyGFbBm.o
+
+.comment        0x00000000       0x33
+ .comment       0x00000000       0x33 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o
+                                 0x34 (size before relaxing)
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 C:\Users\wuton\AppData\Local\Temp\ccXqPH2S.o

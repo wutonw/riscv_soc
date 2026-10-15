@@ -1,0 +1,106 @@
+"""Build a standalone 32KiB pROM image and its RAM startup initializer."""
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
+
+
+def run(*args: str) -> str:
+    result = subprocess.run(args, cwd=ROOT, text=True, capture_output=True)
+    if result.stderr:
+        print(result.stderr, end="")
+    result.check_returncode()
+    return result.stdout
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--smoke", action="store_true", help="Short-period test image; does not replace board HEX")
+    parser.add_argument("--uart-baud", type=int, default=115200)
+    parser.add_argument("--frame-cycles", type=int, default=100000000)
+    parser.add_argument("--width", type=int, default=64)
+    parser.add_argument("--height", type=int, default=24)
+    args = parser.parse_args()
+    if not 0 < args.uart_baud <= 10000000:
+        parser.error("UART baud must be positive and at most 10 Mbps")
+    if not args.smoke and (args.uart_baud != 115200 or args.frame_cycles != 100000000 or args.width != 64 or args.height != 24):
+        parser.error("Non-board baud, frame interval or dimensions require --smoke")
+    if not 0 < args.frame_cycles <= 0x7fffffff or not 4 <= args.width <= 128 or not 4 <= args.height <= 48:
+        parser.error("Invalid frame interval or image dimensions")
+    build = HERE / "build" / ("smoke" if args.smoke else "board")
+    build.mkdir(parents=True, exist_ok=True)
+    for tool in ("gcc", "objcopy", "objdump", "nm"):
+        if not shutil.which("riscv-none-elf-" + tool):
+            raise RuntimeError("Missing riscv-none-elf-" + tool)
+    init = build / "init_data.S"
+    init.write_text('.section .board_init,"ax"\n.globl board_init_data\nboard_init_data:\nret\n', encoding="ascii")
+    flags = ["-march=rv32im_zicsr", "-mabi=ilp32", "-O2", "-mstrict-align",
+             "-msmall-data-limit=0", "-ffreestanding", "-fno-builtin",
+             "-fno-tree-loop-distribute-patterns", "-nostdlib", "-nostartfiles",
+             "-Wl,--no-check-sections", f"-DUART_BAUD={args.uart_baud}u",
+             f"-DFRAME_CYCLES={args.frame_cycles}u", f"-DFRAME_WIDTH={args.width}u", f"-DFRAME_HEIGHT={args.height}u",
+             "-T", str(HERE / "link.ld")]
+
+    def link(name: str) -> Path:
+        elf = build / (name + ".elf")
+        run("riscv-none-elf-gcc", *flags, str(HERE / "start.S"), str(HERE / "main.c"),
+            str(init), "-lgcc", "-Wl,-Map=" + str(build / (name + ".map")), "-o", str(elf))
+        return elf
+
+    def ram_image(elf: Path, name: str) -> bytes:
+        destination = build / name
+        run("riscv-none-elf-objcopy", "-O", "binary", "--only-section=.rodata",
+            "--only-section=.data", str(elf), str(destination))
+        return destination.read_bytes()
+
+    data = ram_image(link("probe"), "probe_data.bin")
+    padded_data = data + bytes((-len(data)) % 4)
+    lines = [".option norvc", ".option norelax", '.section .board_init,"ax"',
+             ".globl board_init_data", "board_init_data:", "li t0, 0x5000"]
+    for offset in range(0, len(padded_data), 4):
+        if offset and offset % 1024 == 0:
+            lines.append("addi t0, t0, 1024")
+        word = int.from_bytes(padded_data[offset:offset + 4], "little")
+        lines += [f"li t1, 0x{word:08x}", f"sw t1, {offset % 1024}(t0)"]
+    lines.append("ret")
+    init.write_text("\n".join(lines) + "\n", encoding="ascii")
+    elf = link("julia_anim")
+    if ram_image(elf, "ram_data.bin") != data:
+        raise RuntimeError("RAM data changed between probe and final link")
+
+    binary = build / "julia_anim.bin"
+    run("riscv-none-elf-objcopy", "-O", "binary", "--only-section=.text", str(elf), str(binary))
+    program = binary.read_bytes()
+    if len(program) > 32768:
+        raise RuntimeError("Instruction ROM exceeds 32KiB")
+    padded_text = program + bytes(32768 - len(program))
+    hexfile = build / "julia_anim.hex"
+    hexfile.write_text("".join(f"{int.from_bytes(padded_text[i:i + 4], 'little'):08x}\n"
+                               for i in range(0, 32768, 4)), encoding="ascii")
+    (build / "julia_anim.asm").write_text(run("riscv-none-elf-objdump", "-d", str(elf)), encoding="utf-8")
+    names = run("riscv-none-elf-nm", "-n", str(elf))
+    symbols = {parts[2]: int(parts[0], 16) for line in names.splitlines()
+               if len(parts := line.split()) == 3}
+    manifest = {"clock_hz": 100000000, "uart_baud": args.uart_baud,
+                "frame_cycles": args.frame_cycles, "rom_bytes": len(program),
+                "ram_init_bytes": len(data), "symbols": symbols}
+    (build / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="ascii")
+    if not args.smoke:
+        shutil.copyfile(hexfile, HERE / "julia_anim.hex")
+        (HERE / "julia_anim_config.vh").write_text(
+            "// Generated by firmware/julia_anim/build.py; matches julia_anim.hex.\n"
+            f"{chr(96)}define JULIA_ANIM_FAIL_PC 32'h{symbols['julia_fail_park']:08x}\n",
+            encoding="ascii")
+    print(f"Mode={'smoke' if args.smoke else 'board'}; ROM={len(program)} bytes; RAM init={len(data)} bytes")
+    print(f"UART={args.uart_baud}; frame interval={args.frame_cycles / 100000000:g}s at 100MHz")
+    print(f"HEX: {hexfile}")
+
+
+if __name__ == "__main__":
+    main()

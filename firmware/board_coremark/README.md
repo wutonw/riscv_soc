@@ -13,7 +13,8 @@ firmware\board_coremark\build.cmd
 
 板子晶振为 50 MHz，`clk_wiz_0` 输出 100 MHz 给 CPU、ROM、RAM 和 UART。
 XDC 的输入时钟保持 20 ns，PLL 自动派生 10 ns 的 CPU 时钟。
-固件计时按 100 MHz，UART 参数也按 100 MHz，串口仍为 115200、8N1。连接串口后按复位。
+固件通过 `cycle` CSR 计数，不再依赖旧的 `0x10004` MMIO 计数器；
+计时按 100 MHz，UART 参数也按 100 MHz，串口仍为 115200、8N1。连接串口后按复位。
 程序先初始化数据 RAM，运行 220 个整数/乘除法黄金结果检查，以及
 访存、转发、分支跳转、错误路径和 CSR 自检，然后运行原版 EEMBC CoreMark。
 数据规模 2000 字节，性能种子 `0, 0, 0x66`，`-O2`，单线程静态内存。

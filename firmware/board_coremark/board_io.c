@@ -6,7 +6,9 @@ static uint32_t tx_started;
 
 uint32_t board_cycles(void)
 {
-    return *(volatile uint32_t *)0x10004u;
+    uint32_t cycles;
+    __asm__ volatile("csrr %0, cycle" : "=r"(cycles));
+    return cycles;
 }
 
 void board_putc(char c)

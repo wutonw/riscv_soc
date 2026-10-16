@@ -1,12 +1,12 @@
 // FPGA 厂商选择：运行 switch_fpga.cmd，输入 1 选 Gowin、2 选 Xilinx
 //`define FPGA_GOWIN
 `define FPGA_XILINX
-`include "D:/aaa1verilog_project/riscv_soc/firmware/square_anim/square_anim_config.vh"
+`include "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark_config.vh"
 
 module top #(
-    parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/square_anim/square_anim.hex",
-    parameter [31:0] FAIL_PC = `SQUARE_ANIM_FAIL_PC,
-    parameter [31:0] TRAP_FAIL_PC = FAIL_PC
+    parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark.hex",
+    parameter [31:0] FAIL_PC = `BOARD_COREMARK_FAIL_PC,
+    parameter [31:0] TRAP_FAIL_PC = `BOARD_COREMARK_TRAP_PC
 )(
     input wire raw_rst_n,
     input wire clk,
@@ -80,14 +80,14 @@ module top #(
         .tx(tx)
     );
 
-    // Generated park address matches the current square-animation firmware.
+    // Generated park addresses match the current CoreMark firmware.
     reg failure_latched;
 
     always @(posedge cpu_clk or negedge cpu_rst_n) begin
         if (!cpu_rst_n) begin
             failure_latched <= 1'b0;
         end else begin
-            if (pc == FAIL_PC)
+            if (pc == FAIL_PC || pc == TRAP_FAIL_PC)
                 failure_latched <= 1'b1;
         end
     end
@@ -99,7 +99,7 @@ endmodule
 
 `ifdef FPGA_XILINX
 module board_stress_rom #(
-    parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/square_anim/square_anim.hex"
+    parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark.hex"
 )(
     input wire clk,
     input wire ce,

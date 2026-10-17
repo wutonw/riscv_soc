@@ -28,11 +28,11 @@ module mmio_decode(
 
     assign mem_raw_ram_r_data = ram_raw_r_data;
 
-    uart_top u_uart_top(
-        .clk(clk),
-        .rst_n(rst_n),
-        .w_data(mem_ram_w_data[7:0]),
-        .wr_en(is_uart),
-        .tx(tx)
-    );
+    // uart_top u_uart_top(
+    //     .clk(clk),
+    //     .rst_n(rst_n),
+    //     .w_data(mem_ram_w_data[7:0]),
+    //     .wr_en(is_uart),
+    //     .tx(tx)
+    // );
 endmodule

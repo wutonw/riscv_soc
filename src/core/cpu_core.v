@@ -486,14 +486,36 @@ module cpu_core(
     wire wb_fwd_rs1 = wb_forward_valid && id_ex_use_rs1 && (mem_wb_rd_addr == id_ex_rs1_addr); 
     wire wb_fwd_rs2 = !id_ex_is_store && wb_forward_valid && id_ex_use_rs2 && (mem_wb_rd_addr == id_ex_rs2_addr);
     wire fwd_jump_or_reg = ex_mem_jump || ex_mem_jump_reg;
+    
+    // ATTENTION: addi a2,...; sw a3,0(a2); lw a4,0(a2)
+    // store->load 同地址会让 lw 在 ID/EX 停一拍。此时 addi 的 WB 旁路随后消失
+    // 而 ID/EX 原本锁存的 a2 可能还是旧值；停顿时保存旁路值，供 lw 下一拍算地址
+    // 指令离开 ID/EX（!stall）或被 flush 时，清除 latest_rs1_valid
+    wire [31:0] ex_mem_fwd_data = ex_mem_is_csr ? ex_mem_csr_r_data :
+                                fwd_jump_or_reg ? ex_mem_pc + 32'd4 :
+                                ex_mem_alu_result;
+    reg [31:0] latest_rs1_data;
+    reg latest_rs1_valid;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            latest_rs1_valid <= 1'b0;
+        end else if (!stall || id_ex_flush) begin
+            latest_rs1_valid <= 1'b0;
+        end else if (ex_fwd_rs1) begin
+            latest_rs1_data <= ex_mem_fwd_data;
+            latest_rs1_valid <= 1'b1;
+        end else if (wb_fwd_rs1) begin
+            latest_rs1_data <= wb_wr_data;
+            latest_rs1_valid <= 1'b1;
+        end
+    end
     always @(*)begin
         case({ex_fwd_rs1,wb_fwd_rs1})
             2'b01 : op1 = wb_wr_data;
-            2'b11,2'b10 : op1 = (ex_mem_is_csr)? ex_mem_csr_r_data :
-                                (fwd_jump_or_reg) ? ex_mem_pc + 32'd4 :
-                                ex_mem_alu_result;
+            2'b11,2'b10 : op1 = ex_mem_fwd_data;
             //3'b111,3'b110 : op1 = mem_ram_r_data;
-            default : op1 = (id_ex_alu_src_op1 == 2'b00) ? id_ex_rs1_data :
+            default : op1 = (id_ex_alu_src_op1 == 2'b00) ?
+                            (latest_rs1_valid ? latest_rs1_data : id_ex_rs1_data) :
                         (id_ex_alu_src_op1== 2'b01) ? 32'b0 :
                         id_ex_pc;
         endcase
@@ -515,9 +537,9 @@ module cpu_core(
                             id_ex_is_m_ext ? ex_m_ext_result :
                             ex_alu_result ;
 
-    wire [31:0] addr_base = ex_fwd_rs1 ? ex_mem_alu_result :
+    wire [31:0] addr_base = ex_fwd_rs1 ? ex_mem_fwd_data :
                             wb_fwd_rs1 ? wb_wr_data :
-                            id_ex_rs1_data;
+                            latest_rs1_valid ? latest_rs1_data : id_ex_rs1_data;
     wire [31:0] ex_next_store_addr_result = addr_base + id_ex_imm;
 
     wire store_load_use_hazard = ex_mem_is_store && id_ex_is_load && id_ex_valid && ex_mem_valid &&

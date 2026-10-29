@@ -1,4 +1,4 @@
-// FPGA 厂商选择：运行 switch_fpga.cmd，输入 1 选 Gowin、2 选 Xilinx
+// 废 FPGA 厂商选择：运行 switch_fpga.cmd，输入 1 选 Gowin、2 选 Xilinx
 //`define FPGA_GOWIN
 `define FPGA_XILINX
 `include "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark_config.vh"
@@ -8,9 +8,9 @@ module top #(
     parameter [31:0] FAIL_PC = `BOARD_COREMARK_FAIL_PC,
     parameter [31:0] TRAP_FAIL_PC = `BOARD_COREMARK_TRAP_PC
 )(
-    input wire raw_rst_n,
-    input wire clk,
-    output wire led,
+    input  wire raw_rst_n,
+    input  wire clk      ,
+    output wire led      ,
 
     output wire tx
 );
@@ -26,10 +26,10 @@ module top #(
     wire prom_ce;
 
     clk_wiz_0 u_clk_wiz (
-        .clk_in1  (clk),
-        .reset    (~rst_n),
-        .clk_out1 (cpu_clk),
-        .locked   (clk_locked)
+        .clk_in1 (clk),
+        .reset   (~rst_n),
+        .clk_out1(cpu_clk),
+        .locked  (clk_locked)
     );
 
     debounce u_debounce(
@@ -51,12 +51,12 @@ module top #(
 
     `ifdef FPGA_GOWIN
         Gowin_pROM u_instruction_rom(
-            .dout  (inst),
-            .clk   (clk),
-            .oce   (1'b1),
-            .ce    (prom_ce),
-            .reset (~rst_n),
-            .ad    (prom_addr)
+            .dout (inst),
+            .clk  (clk),
+            .oce  (1'b1),
+            .ce   (prom_ce),
+            .reset(~rst_n),
+            .ad   (prom_addr)
         );
     `elsif FPGA_XILINX
         board_stress_rom #(.ROM_FILE(ROM_FILE)) u_instruction_rom (
@@ -71,13 +71,13 @@ module top #(
 
     wire [31:0] pc;
     cpu_core u_cpu_core(
-        .clk(cpu_clk),
-        .rst_n(cpu_rst_n),
-        .pc (pc),
-        .inst(inst),
+        .clk      (cpu_clk),
+        .rst_n    (cpu_rst_n),
+        .pc       (pc),
+        .inst     (inst),
         .inst_addr(inst_addr),
-        .prom_ce(prom_ce),
-        .tx(tx)
+        .prom_ce  (prom_ce),
+        .tx       (tx)
     );
 
     // Generated park addresses match the current CoreMark firmware.
@@ -101,10 +101,10 @@ endmodule
 module board_stress_rom #(
     parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark.hex"
 )(
-    input wire clk,
-    input wire ce,
-    input wire [12:0] addr,
-    output reg [31:0] inst
+    input  wire        clk ,
+    input  wire        ce  ,
+    input  wire [12:0] addr,
+    output reg  [31:0] inst
 );
     (* rom_style = "block" *) reg [31:0] words [0:8191];
 

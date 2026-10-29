@@ -1,47 +1,47 @@
 //todo : 后续检查是否fwd逻辑覆盖外设读
 
 module axi_lite_master(
-    input logic clk,
-    input logic rst_n,
-    output logic axi_stall,
-    output logic axi_error,
-    input logic axi_error_is_handled,
+    input  logic        clk                 ,
+    input  logic        rst_n               ,
+    output logic        axi_stall           ,
+    output logic        axi_error           ,
+    input  logic        axi_error_is_handled,
 
-    input logic cpu_req,
-    input logic cpu_we, //0:load,1:store
-    input logic [31:0] cpu_addr,
-    input logic [31:0] cpu_wdata,
-    input logic [3:0] cpu_wstrb,
-    output logic [31:0] cpu_rdata,
+    input  logic        cpu_req             ,
+    input  logic        cpu_we              ,  //0:load,1:store
+    input  logic [31:0] cpu_addr            ,
+    input  logic [31:0] cpu_wdata           ,
+    input  logic [3:0]  cpu_wstrb           ,
+    output logic [31:0] cpu_rdata           ,
 
     //Read Address
-    output logic [31:0] ar_addr,
-    output logic ar_valid,
-    input logic ar_ready,
-    output logic [2:0] ar_prot,
+    output logic [31:0] ar_addr             ,
+    output logic        ar_valid            ,
+    input  logic        ar_ready            ,
+    output logic [2:0]  ar_prot             ,
 
     //Read Data
-    input logic [31:0] r_data,
-    input logic [1:0] r_resp,
-    input logic r_valid,
-    output logic r_ready,
+    input  logic [31:0] r_data              ,
+    input  logic [1:0]  r_resp              ,
+    input  logic        r_valid             ,
+    output logic        r_ready             ,
 
     //Write Address
-    output logic [31:0] aw_addr,
-    output logic aw_valid,
-    input logic aw_ready,
-    output logic [2:0] aw_prot,
+    output logic [31:0] aw_addr             ,
+    output logic        aw_valid            ,
+    input  logic        aw_ready            ,
+    output logic [2:0]  aw_prot             ,
 
     //Write Data
-    output logic [31:0] w_data,
-    output logic [3:0] w_strb,
-    output logic w_valid,
-    input logic w_ready,
+    output logic [31:0] w_data              ,
+    output logic [3:0]  w_strb              ,
+    output logic        w_valid             ,
+    input  logic        w_ready             ,
 
     //Write Response
-    input logic [1:0] b_resp,
-    input logic b_valid,
-    output logic b_ready
+    input  logic [1:0]  b_resp              ,
+    input  logic        b_valid             ,
+    output logic        b_ready
 );  
     assign axi_stall = cpu_req && (state != IDLE) && !resp_done;
     assign axi_error = ((state == RRESP && r_fire && r_resp != 2'b00) ||

@@ -2,12 +2,12 @@ module uart_rx #(
     parameter CLK_FREQ = 27_000_000, // 系统时钟频率
     parameter BAUD_RATE = 115_200     // 默认波特率
 )(
-    input clk,
-    input rx,
-    input rst_n,
-    output reg rx_busy,
+    input            clk    ,
+    input            rx     ,
+    input            rst_n  ,
+    output reg       rx_busy,
     output reg [7:0] rx_data,
-    output reg rx_done
+    output reg       rx_done
 );
     parameter BUSY = 1'b1;
     parameter IDLE = 1'b0;

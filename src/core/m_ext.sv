@@ -1,17 +1,17 @@
 module m_ext #(
     parameter int unsigned PIPELINE_STAGE = 2
 )(
-    input logic clk,
-    input logic rst_n,
-    input logic id_ex_valid,
-    input logic id_ex_is_m_ext,
+    input  logic        clk           ,
+    input  logic        rst_n         ,
+    input  logic        id_ex_valid   ,
+    input  logic        id_ex_is_m_ext,
 
-    input logic [2:0] m_op,
-    input logic [31:0] op1,
-    input logic [31:0] op2,
-    output logic [31:0] m_ext_result,
+    input  logic [2:0]  m_op          ,
+    input  logic [31:0] op1           ,
+    input  logic [31:0] op2           ,
+    output logic [31:0] m_ext_result  ,
 
-    output logic m_ext_stall
+    output logic        m_ext_stall
 );
     logic dsp_stall;
     logic div_stall;
@@ -70,9 +70,9 @@ module m_ext #(
 
     mult_gen_0 u_mult_gen_0 (
         .CLK(clk),
-        .A(signed_op1),
-        .B(signed_op2),
-        .P(full_product)
+        .A  (signed_op1),
+        .B  (signed_op2),
+        .P  (full_product)
     );
 
     logic div_ready;
@@ -110,13 +110,13 @@ module m_ext #(
         end
     end
     div u_div(
-        .clk(clk),
-        .rst_n(rst_n),
-        .dividend(op1_abs),
-        .divisor(op2_abs),
-        .quotient(quotient),
+        .clk      (clk),
+        .rst_n    (rst_n),
+        .dividend (op1_abs),
+        .divisor  (op2_abs),
+        .quotient (quotient),
         .remainder(remainder),
-        .div_en(div_en),
+        .div_en   (div_en),
         .div_ready(div_ready),
         .div_stall(div_stall)
     );
@@ -126,15 +126,15 @@ module m_ext #(
 endmodule
 
 module div(
-    input  logic        clk,
-    input  logic        rst_n,
-    input  logic [31:0] dividend,
-    input  logic [31:0] divisor,
+    input  logic        clk      ,
+    input  logic        rst_n    ,
+    input  logic [31:0] dividend ,
+    input  logic [31:0] divisor  ,
 
-    output logic [31:0] quotient,
+    output logic [31:0] quotient ,
     output logic [31:0] remainder,
 
-    input  logic        div_en,
+    input  logic        div_en   ,
     output logic        div_ready,
     output logic        div_stall
 );

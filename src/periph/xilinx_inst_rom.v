@@ -20,17 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module xilinx_inst_rom (
-    input  wire        clk,
-    input  wire        ce,
+    input  wire        clk ,
+    input  wire        ce  ,
     input  wire [12:0] addr,
     output wire [31:0] inst
 );
 
     blk_mem_gen_0 u_rom (
-        .clka  (clk),
-        .ena   (ce),
-        .addra (addr),
-        .douta (inst)
+        .clka (clk),
+        .ena  (ce),
+        .addra(addr),
+        .douta(inst)
     );
 
 endmodule

@@ -18,15 +18,19 @@ module mmio_decode(
     wire is_uart = (ex_mem_alu_result == 32'h0001_0000) && (mem_ram_s_we[0]);
 
     ram u_ram(
-        .clk(clk),
-        .we(mem_ram_s_we & {4{is_ram}}),
-        .rd_addr(ram_rd_addr),  //提前吃地址
-        .wr_addr(ex_mem_alu_result),
+        .clk       (clk),
+        .we        (mem_ram_s_we & {4{is_ram}}),
+        .rd_addr   (ram_rd_addr),
+        .wr_addr   (ex_mem_alu_result), //提前吃地址
         .ram_w_data(mem_ram_w_data),
         .ram_r_data(ram_raw_r_data)
     );
 
     assign mem_raw_ram_r_data = ram_raw_r_data;
+
+    axi_lite_master u_axi_lite_master(
+        .*
+    );
 
     // uart_top u_uart_top(
     //     .clk(clk),

@@ -1,22 +1,22 @@
 module csr_file(
-    input wire clk,
-    input wire rst_n,
+    input  wire        clk           ,
+    input  wire        rst_n         ,
 
-    input wire [11:0] csr_addr,
-    input wire [11:0] csr_w_addr,
-    input wire [31:0] csr_w_data,
-    input wire csr_we,
-    output reg [31:0] csr_r_data,
+    input  wire [11:0] csr_addr      ,
+    input  wire [11:0] csr_w_addr    ,
+    input  wire [31:0] csr_w_data    ,
+    input  wire        csr_we        ,
+    output reg  [31:0] csr_r_data    ,
 
-    input wire trap_enter,//1 pulse
-    input wire [31:0] trap_pc,
-    input wire [31:0] trap_cause,
-    output wire [31:0] trap_vector,
+    input  wire        trap_enter    ,  //1 pulse
+    input  wire [31:0] trap_pc       ,
+    input  wire [31:0] trap_cause    ,
+    output wire [31:0] trap_vector   ,
 
-    input wire trap_exit,
-    output wire [31:0] mepc_out,
+    input  wire        trap_exit     ,
+    output wire [31:0] mepc_out      ,
 
-    output wire global_intr_en //mstatus.MIE
+    output wire        global_intr_en   //mstatus.MIE
 );
 
     reg [31:0] mepc;

@@ -1,21 +1,21 @@
 module regfile(
-    input wire clk,
-    input wire rst_n,
+    input  wire        clk         ,
+    input  wire        rst_n       ,
 
     //write port
-    input wire wr_en,
-    input wire [4:0] wr_addr,
-    input wire [31:0] wr_data,
+    input  wire        wr_en       ,
+    input  wire [4:0]  wr_addr     ,
+    input  wire [31:0] wr_data     ,
 
     //read port 1
-    input wire [4:0] rs1_addr,
-    output wire [31:0] rs1_data,
+    input  wire [4:0]  rs1_addr    ,
+    output wire [31:0] rs1_data    ,
 
     //read port 2
-    input wire [4:0] rs2_addr,
-    output wire [31:0] rs2_data,
+    input  wire [4:0]  rs2_addr    ,
+    output wire [31:0] rs2_data    ,
 
-    input wire [4:0] mem_rs2_addr,
+    input  wire [4:0]  mem_rs2_addr,
     output wire [31:0] mem_rs2_data
 );
 

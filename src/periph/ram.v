@@ -1,11 +1,11 @@
 module ram(
-    input wire clk,
+    input  wire        clk       ,
 
-    input wire [3:0] we,
-    input wire [31:0] rd_addr,
-    input wire [31:0] wr_addr,
-    input wire [31:0] ram_w_data,
-    output reg [31:0] ram_r_data
+    input  wire [3:0]  we        ,
+    input  wire [31:0] rd_addr   ,
+    input  wire [31:0] wr_addr   ,
+    input  wire [31:0] ram_w_data,
+    output reg  [31:0] ram_r_data
 );
 
     reg [31:0] ram [0:8191];//32KB

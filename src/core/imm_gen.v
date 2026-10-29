@@ -1,7 +1,7 @@
 `include "define.vh"
 module imm_gen(
-    input wire [31:0] inst,
-    output reg [31:0] imm
+    input  wire [31:0] inst,
+    output reg  [31:0] imm
 );
     wire [6:0] opcode = inst[6:0];
     always @(*) begin

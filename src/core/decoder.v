@@ -1,37 +1,37 @@
 `include "define.vh"
 module decoder(
-    input wire [31:0] inst,
-    output reg wr_en,
-    output reg illegal_inst,
+    input  wire [31:0] inst             ,
+    output reg         wr_en            ,
+    output reg         illegal_inst     ,
 
-    output reg [1:0] alu_src_op1,//00:rs1,01:0,10:pc
-    output reg alu_src_op2,//0:rs2,1:imm
-    output reg ext_u,//0:ext,1:u_ext
-    output reg [1:0] ram_size,//00:B, 01:H, 10:W
-    output reg ram_we,
-    output reg [1:0] wb_sel,//00:alu, 01:ram, 10:pc+4, 11:csr_r_data
-    output reg branch,
-    output reg jump,
-    output reg jump_reg,
-    output reg is_load,
-    output reg is_store,
+    output reg  [1:0]  alu_src_op1      ,  //00:rs1,01:0,10:pc
+    output reg         alu_src_op2      ,  //0:rs2,1:imm
+    output reg         ext_u            ,  //0:ext,1:u_ext
+    output reg  [1:0]  ram_size         ,  //00:B, 01:H, 10:W
+    output reg         ram_we           ,
+    output reg  [1:0]  wb_sel           ,  //00:alu, 01:ram, 10:pc+4, 11:csr_r_data
+    output reg         branch           ,
+    output reg         jump             ,
+    output reg         jump_reg         ,
+    output reg         is_load          ,
+    output reg         is_store         ,
 
-    output reg decode_trap_enter,
-    output reg trap_exit,
-    output reg is_csr,
-    output reg csr_we,
+    output reg         decode_trap_enter,
+    output reg         trap_exit        ,
+    output reg         is_csr           ,
+    output reg         csr_we           ,
 
-    output wire [4:0] rs1_addr,
-    output wire [4:0] rs2_addr,
-    output wire [4:0] rd_addr,
-    output wire [11:0] csr_addr,
+    output wire [4:0]  rs1_addr         ,
+    output wire [4:0]  rs2_addr         ,
+    output wire [4:0]  rd_addr          ,
+    output wire [11:0] csr_addr         ,
 
-    output reg [3:0] alu_op,
+    output reg  [3:0]  alu_op           ,
 
-    output reg use_rs1,
-    output reg use_rs2,
-    output reg is_m_ext,
-    output reg [2:0] m_op
+    output reg         use_rs1          ,
+    output reg         use_rs2          ,
+    output reg         is_m_ext         ,
+    output reg  [2:0]  m_op
 );
 
     wire [6:0] opcode = inst[6:0];

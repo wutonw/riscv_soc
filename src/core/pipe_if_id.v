@@ -2,7 +2,7 @@ module pipe_if_id(
     input wire clk,
     input wire rst_n,
     input wire if_id_flush,
-    input wire stall,
+    input wire stall_id,
 
     input wire [31:0] pc,
     input wire [31:0] inst,
@@ -21,7 +21,7 @@ module pipe_if_id(
         end else if (if_id_flush)begin
             valid <= 1'b0;
             if_id_valid <= 0;
-        end else if(!stall)begin
+        end else if(!stall_id)begin
             pc1 <= pc;
             if_id_pc <= pc1;
             valid <= 1'b1;
@@ -30,7 +30,7 @@ module pipe_if_id(
     end
 
     always @(posedge clk) begin
-        if (!stall) if_id_inst <= inst;
+        if (!stall_id) if_id_inst <= inst;
     end
 
 endmodule

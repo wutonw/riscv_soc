@@ -1,6 +1,7 @@
 module pipe_ex_mem(
     input wire clk,
     input wire rst_n,
+    input wire stall_mem,
     input wire ex_mem_flush,
 
     input wire [31:0] ex_alu_result,
@@ -60,32 +61,34 @@ module pipe_ex_mem(
             ex_mem_valid <= 1'b0;
         end else if (ex_mem_flush)begin
             ex_mem_valid <= 0;
-        end else begin
+        end else if (!stall_mem)begin
             ex_mem_valid <= id_ex_valid;
         end
     end
 
     always @(posedge clk) begin
-        ex_mem_alu_result <= ex_alu_result;
-        ex_mem_wr_en <= id_ex_wr_en;
-        ex_mem_ext_u <= id_ex_ext_u;
-        ex_mem_ram_size <= id_ex_ram_size;
-        ex_mem_ram_we <= id_ex_ram_we;
-        ex_mem_wb_sel <= id_ex_wb_sel;
-        ex_mem_is_store <= id_ex_is_store;
-        ex_mem_pc <= id_ex_pc;
-        ex_mem_inst <= id_ex_inst;
-        ex_mem_rd_addr <= id_ex_rd_addr;
-        ex_mem_rs2_data <= id_ex_rs2_data;
-        ex_mem_rs2_addr <= id_ex_rs2_addr;
-        ex_mem_is_load <= id_ex_is_load;
-        ex_mem_csr_r_data <= id_ex_csr_r_data;
-        ex_mem_is_csr <= id_ex_is_csr;
-        ex_mem_csr_we <= id_ex_csr_we;
-        ex_mem_csr_addr <= id_ex_csr_addr;
-        ex_mem_csr_w_data <= id_ex_csr_w_data;
-        ex_mem_jump_reg <= id_ex_jump_reg;
-        ex_mem_jump <= id_ex_jump;
+        if (!stall_mem)begin
+            ex_mem_alu_result <= ex_alu_result;
+            ex_mem_wr_en <= id_ex_wr_en;
+            ex_mem_ext_u <= id_ex_ext_u;
+            ex_mem_ram_size <= id_ex_ram_size;
+            ex_mem_ram_we <= id_ex_ram_we;
+            ex_mem_wb_sel <= id_ex_wb_sel;
+            ex_mem_is_store <= id_ex_is_store;
+            ex_mem_pc <= id_ex_pc;
+            ex_mem_inst <= id_ex_inst;
+            ex_mem_rd_addr <= id_ex_rd_addr;
+            ex_mem_rs2_data <= id_ex_rs2_data;
+            ex_mem_rs2_addr <= id_ex_rs2_addr;
+            ex_mem_is_load <= id_ex_is_load;
+            ex_mem_csr_r_data <= id_ex_csr_r_data;
+            ex_mem_is_csr <= id_ex_is_csr;
+            ex_mem_csr_we <= id_ex_csr_we;
+            ex_mem_csr_addr <= id_ex_csr_addr;
+            ex_mem_csr_w_data <= id_ex_csr_w_data;
+            ex_mem_jump_reg <= id_ex_jump_reg;
+            ex_mem_jump <= id_ex_jump;
+        end
     end
 
 endmodule

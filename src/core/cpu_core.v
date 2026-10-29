@@ -12,20 +12,23 @@ module cpu_core(
     output wire tx
 );
 
-    wire stall;
     assign inst_addr = pc;
-    assign prom_ce = !stall;
-    assign stall = csr_ex_load_use_hazard || store_load_use_hazard || load_use_hazard ||
-                    csr_mem_load_use_hazard || ex_m_ext_stall;
-    // ==================================================
-    // IF Stage
-    wire load_use_bubble =!store_load_use_hazard && (load_use_hazard || csr_ex_load_use_hazard);
-    reg [31:0] next_pc;
+    assign prom_ce = !stall_if;
+    wire stall_wb = 1'b0;
+    wire stall_mem = stall_wb ;
+    wire stall_ex = stall_mem || store_load_use_hazard || ex_m_ext_stall;
+    wire stall_id = stall_ex  || csr_ex_load_use_hazard || load_use_hazard || csr_mem_load_use_hazard; 
+    wire stall_if = stall_id;
+
+    wire load_use_bubble = !store_load_use_hazard && (load_use_hazard || csr_ex_load_use_hazard);
     wire if_id_flush = branch_if_id_flush || trap_if_id_flush || trap_mret_if_id_flush;
     wire id_ex_flush = branch_id_ex_flush || load_use_bubble || trap_id_ex_flush || 
                         trap_mret_id_ex_flush ||csr_mem_load_use_hazard;
     wire ex_mem_flush = store_load_use_hazard || trap_ex_mem_flush || ex_m_ext_stall;
     wire mem_wb_flush = trap_mem_wb_flush;
+    // ==================================================
+    // IF Stage
+    reg [31:0] next_pc;
     //flush and next_pc logic
     reg branch_if_id_flush;
     reg branch_id_ex_flush;
@@ -52,8 +55,8 @@ module cpu_core(
     wire id_trap_valid = if_id_valid && (id_decode_trap_enter || id_illegal_inst);
 
     assign id_trap_enter = mem_trap_valid || ex_trap_valid ||
-                        (id_trap_valid && !ex_redirect_valid && !stall);
-    wire mret_fire = id_trap_exit && if_id_valid && !stall &&
+                        (id_trap_valid && !ex_redirect_valid && !stall_id);
+    wire mret_fire = id_trap_exit && if_id_valid && !stall_id &&
                     !mem_trap_valid && !ex_trap_valid && !ex_redirect_valid;
     wire redirect_valid = id_trap_enter || ex_redirect_valid || mret_fire;
 
@@ -90,7 +93,7 @@ module cpu_core(
     pc_reg u_pc_reg(
         .clk(clk),
         .rst_n(rst_n),
-        .stall(stall && !redirect_valid),
+        .stall(stall_if && !redirect_valid),
         .next_pc(next_pc),
         .pc(pc)
     );
@@ -128,7 +131,7 @@ module cpu_core(
         .clk(clk),
         .rst_n(rst_n),
         .if_id_flush(if_id_flush),
-        .stall(stall),
+        .stall_id(stall_id),
         .pc(pc),
         .inst(inst),
         .if_id_inst(if_id_inst),
@@ -361,7 +364,7 @@ module cpu_core(
     pipe_id_ex u_pipe_id_ex(
         .clk(clk),
         .rst_n(rst_n),
-        .stall(stall),
+        .stall_ex(stall_ex),
         .id_ex_flush(id_ex_flush),
         .if_id_valid(if_id_valid),
         .if_id_pc(if_id_pc),
@@ -490,7 +493,7 @@ module cpu_core(
     // ATTENTION: addi a2,...; sw a3,0(a2); lw a4,0(a2)
     // store->load 同地址会让 lw 在 ID/EX 停一拍。此时 addi 的 WB 旁路随后消失
     // 而 ID/EX 原本锁存的 a2 可能还是旧值；停顿时保存旁路值，供 lw 下一拍算地址
-    // 指令离开 ID/EX（!stall）或被 flush 时，清除 latest_rs1_valid
+    // 指令离开 ID/EX（!stall_ex）或被 flush 时，清除 latest_rs1_valid
     wire [31:0] ex_mem_fwd_data = ex_mem_is_csr ? ex_mem_csr_r_data :
                                 fwd_jump_or_reg ? ex_mem_pc + 32'd4 :
                                 ex_mem_alu_result;
@@ -499,7 +502,7 @@ module cpu_core(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             latest_rs1_valid <= 1'b0;
-        end else if (!stall || id_ex_flush) begin
+        end else if (!stall_ex || id_ex_flush) begin
             latest_rs1_valid <= 1'b0;
         end else if (ex_fwd_rs1) begin
             latest_rs1_data <= ex_mem_fwd_data;
@@ -578,6 +581,7 @@ module cpu_core(
     pipe_ex_mem u_pipe_ex_mem(
         .clk(clk),
         .rst_n(rst_n),
+        .stall_mem(stall_mem),
         .ex_mem_flush(ex_mem_flush),
         .ex_alu_result(ex_result),
         .ex_mem_alu_result(ex_mem_alu_result),
@@ -666,6 +670,7 @@ module cpu_core(
     pipe_mem_wb u_pipe_mem_wb(
         .clk(clk),
         .rst_n(rst_n),
+        .stall_wb(stall_wb),
         .mem_wb_flush(mem_wb_flush),
         .ex_mem_pc(ex_mem_pc),
         .ex_mem_wb_sel(ex_mem_wb_sel),

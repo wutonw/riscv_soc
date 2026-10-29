@@ -1,7 +1,7 @@
 module pipe_id_ex(
     input wire clk,
     input wire rst_n,
-    input wire stall,
+    input wire stall_ex,
     input wire id_ex_flush,
 
     input wire if_id_valid,
@@ -84,13 +84,13 @@ module pipe_id_ex(
             id_ex_valid <= 1'b0;
         end else if (id_ex_flush)begin
             id_ex_valid <= 1'b0;
-        end else if(!stall) begin
+        end else if(!stall_ex) begin
             id_ex_valid <= if_id_valid;
         end
     end
 
     always @(posedge clk) begin
-        if (!stall) begin
+        if (!stall_ex) begin
             id_ex_pc <= if_id_pc;
             id_ex_inst <= if_id_inst;
             id_ex_rs1_addr <= id_rs1_addr;

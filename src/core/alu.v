@@ -1,8 +1,8 @@
 `include "define.vh"
 module alu(
-    input  wire [3:0]  alu_op    ,
-    input  wire [31:0] op1       ,
-    input  wire [31:0] op2       ,
+    input  wire [3:0]  alu_op,
+    input  wire [31:0] op1,
+    input  wire [31:0] op2,
 
     output reg  [31:0] alu_result
 );

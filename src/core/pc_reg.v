@@ -1,8 +1,8 @@
 module pc_reg(
-    input  wire        clk    ,
-    input  wire        rst_n  ,
+    input  wire        clk,
+    input  wire        rst_n,
 
-    input  wire        stall  ,
+    input  wire        stall,
     input  wire [31:0] next_pc,
     output reg  [31:0] pc
 );

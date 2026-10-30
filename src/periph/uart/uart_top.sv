@@ -1,9 +1,9 @@
 module uart_top(
-    input  logic       clk   ,
-    input  logic       rst_n ,
+    input  logic       clk,
+    input  logic       rst_n,
     
     input  logic [7:0] w_data,
-    input  logic       wr_en ,
+    input  logic       wr_en,
 
     output logic       tx
 );

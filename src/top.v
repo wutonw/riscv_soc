@@ -9,8 +9,8 @@ module top #(
     parameter [31:0] TRAP_FAIL_PC = `BOARD_COREMARK_TRAP_PC
 )(
     input  wire raw_rst_n,
-    input  wire clk      ,
-    output wire led      ,
+    input  wire clk,
+    output wire led,
 
     output wire tx
 );
@@ -70,6 +70,26 @@ module top #(
     `endif
 
     wire [31:0] pc;
+    wire [31:0] ar_addr;
+    wire ar_valid;
+    wire ar_ready;
+    wire [2:0] ar_prot;
+    wire [31:0] r_data;
+    wire [1:0] r_resp;
+    wire r_valid;
+    wire r_ready;
+    wire [31:0] aw_addr;
+    wire aw_valid;
+    wire aw_ready;
+    wire [2:0] aw_prot;
+    wire [31:0] w_data;
+    wire [3:0] w_strb;
+    wire w_valid;
+    wire w_ready;
+    wire [1:0] b_resp;
+    wire b_valid;
+    wire b_ready;
+
     cpu_core u_cpu_core(
         .clk      (cpu_clk),
         .rst_n    (cpu_rst_n),
@@ -77,7 +97,26 @@ module top #(
         .inst     (inst),
         .inst_addr(inst_addr),
         .prom_ce  (prom_ce),
-        .tx       (tx)
+        .tx       (tx),
+        .ar_addr  (ar_addr),
+        .ar_valid (ar_valid),
+        .ar_ready (ar_ready),
+        .ar_prot  (ar_prot),
+        .r_data   (r_data),
+        .r_resp   (r_resp),
+        .r_valid  (r_valid),
+        .r_ready  (r_ready),
+        .aw_addr  (aw_addr),
+        .aw_valid (aw_valid),
+        .aw_ready (aw_ready),
+        .aw_prot  (aw_prot),
+        .w_data   (w_data),
+        .w_strb   (w_strb),
+        .w_valid  (w_valid),
+        .w_ready  (w_ready),
+        .b_resp   (b_resp),
+        .b_valid  (b_valid),
+        .b_ready  (b_ready)
     );
 
     // Generated park addresses match the current CoreMark firmware.
@@ -101,8 +140,8 @@ endmodule
 module board_stress_rom #(
     parameter ROM_FILE = "D:/aaa1verilog_project/riscv_soc/firmware/board_coremark/board_coremark.hex"
 )(
-    input  wire        clk ,
-    input  wire        ce  ,
+    input  wire        clk,
+    input  wire        ce,
     input  wire [12:0] addr,
     output reg  [31:0] inst
 );

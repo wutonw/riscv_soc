@@ -20,8 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module xilinx_inst_rom (
-    input  wire        clk ,
-    input  wire        ce  ,
+    input  wire        clk,
+    input  wire        ce,
     input  wire [12:0] addr,
     output wire [31:0] inst
 );

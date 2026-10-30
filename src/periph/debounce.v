@@ -1,7 +1,7 @@
 module debounce(
-    input      clk    ,
-    input      key_in ,  //输入信号
-    output reg key_out  //输出信号（稳定）
+    input      clk,
+    input      key_in,   //输入信号
+    output reg key_out   //输出信号（稳定）
 );
 
     reg [19:0] count;//20ms延迟，27Mhz 1/50=540_000

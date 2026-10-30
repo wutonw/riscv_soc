@@ -1,22 +1,41 @@
 `include "define.vh"
 `define NOP 32'b0
 module cpu_core(
-    input  wire        clk      ,
-    input  wire        rst_n    ,
+    input  wire        clk,
+    input  wire        rst_n,
 
-    output wire [31:0] pc       ,
+    output wire [31:0] pc,
 
-    input  wire [31:0] inst     ,
+    input  wire [31:0] inst,
     output wire [31:0] inst_addr,
-    output wire        prom_ce  ,
-    output wire        tx
+    output wire        prom_ce,
+    output wire        tx,
+    output wire [31:0] ar_addr,
+    output wire        ar_valid,
+    input  wire        ar_ready,
+    output wire [2:0]  ar_prot,
+    input  wire [31:0] r_data,
+    input  wire [1:0]  r_resp,
+    input  wire        r_valid,
+    output wire        r_ready,
+    output wire [31:0] aw_addr,
+    output wire        aw_valid,
+    input  wire        aw_ready,
+    output wire [2:0]  aw_prot,
+    output wire [31:0] w_data,
+    output wire [3:0]  w_strb,
+    output wire        w_valid,
+    input  wire        w_ready,
+    input  wire [1:0]  b_resp,
+    input  wire        b_valid,
+    output wire        b_ready
 );
 
     assign inst_addr = pc;
     assign prom_ce = !stall_if;
     
     wire stall_wb = 1'b0;
-    wire stall_mem = stall_wb ;
+    wire stall_mem = stall_wb || axi_stall;
     wire stall_ex = stall_mem || store_load_use_hazard || ex_m_ext_stall;
     wire stall_id = stall_ex  || csr_ex_load_use_hazard || load_use_hazard || csr_mem_load_use_hazard; 
     wire stall_if = stall_id;
@@ -26,7 +45,7 @@ module cpu_core(
     wire id_ex_flush = branch_id_ex_flush || load_use_bubble || trap_id_ex_flush || 
                         trap_mret_id_ex_flush ||csr_mem_load_use_hazard;
     wire ex_mem_flush = store_load_use_hazard || trap_ex_mem_flush || ex_m_ext_stall;
-    wire mem_wb_flush = trap_mem_wb_flush;
+    wire mem_wb_flush = trap_mem_wb_flush || axi_stall;
     // ==================================================
     // IF Stage
     reg [31:0] next_pc;
@@ -644,14 +663,37 @@ module cpu_core(
     //     .ram_r_data(mem_raw_ram_r_data)
     // );
     mmio_decode u_mmio_decode(
-        .clk               (clk),
-        .rst_n             (rst_n),
-        .mem_ram_s_we      (mem_ram_s_we),
-        .ex_addr_result    (ex_addr_result),
-        .ex_mem_alu_result (ex_mem_alu_result),
-        .mem_ram_w_data    (mem_ram_w_data),
-        .mem_raw_ram_r_data(mem_raw_ram_r_data),
-        .tx                (tx)
+        .clk                 (clk),
+        .rst_n               (rst_n),
+        .ex_mem_valid        (ex_mem_valid),
+        .mem_ram_s_we        (mem_ram_s_we),
+        .ex_addr_result      (ex_addr_result),
+        .ex_mem_alu_result   (ex_mem_alu_result),
+        .mem_ram_w_data      (mem_ram_w_data),
+        .mem_raw_ram_r_data  (mem_raw_ram_r_data),
+        .tx                  (tx),
+        .axi_stall           (axi_stall),
+        .axi_error           (axi_error),
+        .axi_error_is_handled(axi_error_is_handled),
+        .ar_addr             (ar_addr),
+        .ar_valid            (ar_valid),
+        .ar_ready            (ar_ready),
+        .ar_prot             (ar_prot),
+        .r_data              (r_data),
+        .r_resp              (r_resp),
+        .r_valid             (r_valid),
+        .r_ready             (r_ready),
+        .aw_addr             (aw_addr),
+        .aw_valid            (aw_valid),
+        .aw_ready            (aw_ready),
+        .aw_prot             (aw_prot),
+        .w_data              (w_data),
+        .w_strb              (w_strb),
+        .w_valid             (w_valid),
+        .w_ready             (w_ready),
+        .b_resp              (b_resp),
+        .b_valid             (b_valid),
+        .b_ready             (b_ready)
     );
     wire store_forward = ex_mem_valid && mem_wb_valid && ex_mem_is_store && (ex_mem_rs2_addr == mem_wb_rd_addr) && (mem_wb_rd_addr != 0) && wb_wr_en;
     wire [31:0] mem_store_data = (store_forward)? wb_wr_data : mem_rs2_data;

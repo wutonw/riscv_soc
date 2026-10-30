@@ -2,19 +2,19 @@ module sync_fifo #(
     parameter DATA_WIDTH = 8,   // 8位宽
     parameter FIFO_DEPTH = 1024  // FIFO 深度
 )(
-    input                    clk    ,
-    input                    rst_n  ,
+    input                    clk,
+    input                    rst_n,
     
     // 写端口
-    input                    wr_en  ,
+    input                    wr_en,
     input   [DATA_WIDTH-1:0] wr_data,
     
     // 读端口
-    input                    rd_en  ,
+    input                    rd_en,
     output  [DATA_WIDTH-1:0] rd_data,
     
     // 状态标志
-    output                   full   ,
+    output                   full,
     output                   empty
 );
 

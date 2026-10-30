@@ -1,15 +1,15 @@
 module m_ext #(
     parameter int unsigned PIPELINE_STAGE = 2
 )(
-    input  logic        clk           ,
-    input  logic        rst_n         ,
-    input  logic        id_ex_valid   ,
+    input  logic        clk,
+    input  logic        rst_n,
+    input  logic        id_ex_valid,
     input  logic        id_ex_is_m_ext,
 
-    input  logic [2:0]  m_op          ,
-    input  logic [31:0] op1           ,
-    input  logic [31:0] op2           ,
-    output logic [31:0] m_ext_result  ,
+    input  logic [2:0]  m_op,
+    input  logic [31:0] op1,
+    input  logic [31:0] op2,
+    output logic [31:0] m_ext_result,
 
     output logic        m_ext_stall
 );
@@ -126,15 +126,15 @@ module m_ext #(
 endmodule
 
 module div(
-    input  logic        clk      ,
-    input  logic        rst_n    ,
-    input  logic [31:0] dividend ,
-    input  logic [31:0] divisor  ,
+    input  logic        clk,
+    input  logic        rst_n,
+    input  logic [31:0] dividend,
+    input  logic [31:0] divisor,
 
-    output logic [31:0] quotient ,
+    output logic [31:0] quotient,
     output logic [31:0] remainder,
 
-    input  logic        div_en   ,
+    input  logic        div_en,
     output logic        div_ready,
     output logic        div_stall
 );

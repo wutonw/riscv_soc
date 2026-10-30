@@ -6,12 +6,12 @@ module uart_tx #(
     parameter CLK_FREQ = 27_000_000,
     parameter BAUD_RATE = 115_200
 )(
-    input            clk      ,
-    input            tx_valid ,
-    input      [7:0] tx_data  ,
-    input            rst_n    ,
-    output reg       tx       ,
-    output reg       tx_busy  ,
+    input            clk,
+    input            tx_valid,
+    input      [7:0] tx_data,
+    input            rst_n,
+    output reg       tx,
+    output reg       tx_busy,
     output reg       tx_accept
 );
     parameter BUSY = 1'b1;

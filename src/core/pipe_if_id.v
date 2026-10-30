@@ -1,13 +1,13 @@
 module pipe_if_id(
-    input  wire        clk        ,
-    input  wire        rst_n      ,
+    input  wire        clk,
+    input  wire        rst_n,
     input  wire        if_id_flush,
-    input  wire        stall_id   ,
+    input  wire        stall_id,
 
-    input  wire [31:0] pc         ,
-    input  wire [31:0] inst       ,
-    output reg  [31:0] if_id_inst ,
-    output reg  [31:0] if_id_pc   ,
+    input  wire [31:0] pc,
+    input  wire [31:0] inst,
+    output reg  [31:0] if_id_inst,
+    output reg  [31:0] if_id_pc,
     output reg         if_id_valid
 );
     reg [31:0] pc1;

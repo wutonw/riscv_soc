@@ -8,10 +8,10 @@ set_property IOSTANDARD LVCMOS33 [get_ports raw_rst_n]
 set_property PACKAGE_PIN T10 [get_ports led]
 set_property PACKAGE_PIN T19 [get_ports raw_rst_n]
 
-set_operating_conditions -grade industrial
-set_load 5.000 [all_outputs]
 set_property LOAD 5 [get_ports tx]
 set_property LOAD 5 [get_ports led]
 
 set_property PACKAGE_PIN P15 [get_ports tx]
 set_property IOSTANDARD LVCMOS33 [get_ports tx]
+
+

@@ -43,7 +43,7 @@ module axi_lite_master(
     input  logic        b_valid,
     output logic        b_ready
 );  
-    assign axi_stall = cpu_req && (state != IDLE) && !resp_done;
+    assign axi_stall = cpu_req && !resp_done;
     assign axi_error = ((state == RRESP && r_fire && r_resp != 2'b00) ||
                         (state == WRESP && b_fire && b_resp != 2'b00));
 

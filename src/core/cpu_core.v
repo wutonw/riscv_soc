@@ -42,9 +42,9 @@ module cpu_core(
 
     wire load_use_bubble = !store_load_use_hazard && (load_use_hazard || csr_ex_load_use_hazard);
     wire if_id_flush = branch_if_id_flush || trap_if_id_flush || trap_mret_if_id_flush;
-    wire id_ex_flush = branch_id_ex_flush || load_use_bubble || trap_id_ex_flush || 
-                        trap_mret_id_ex_flush ||csr_mem_load_use_hazard;
-    wire ex_mem_flush = store_load_use_hazard || trap_ex_mem_flush || ex_m_ext_stall;
+    wire id_ex_flush = branch_id_ex_flush || trap_id_ex_flush || trap_mret_id_ex_flush ||
+                        ((load_use_bubble || csr_mem_load_use_hazard) && !stall_ex);
+    wire ex_mem_flush = trap_ex_mem_flush ||((store_load_use_hazard || ex_m_ext_stall) && !stall_mem);
     wire mem_wb_flush = trap_mem_wb_flush || axi_stall;
     // ==================================================
     // IF Stage
@@ -66,7 +66,7 @@ module cpu_core(
     reg mem_load_misaligned;
     
     wire id_trap_enter;
-    wire ex_redirect_valid = id_ex_valid && (id_ex_jump || id_ex_jump_reg ||
+    wire ex_redirect_valid = !stall_ex && id_ex_valid && (id_ex_jump || id_ex_jump_reg ||
                             (id_ex_branch && branch_taken));
     wire [31:0] ex_redirect_target =id_ex_jump_reg ? {ex_alu_result[31:1], 1'b0} : branch_target;
     wire inst_address_misaligned = ex_redirect_valid && (ex_redirect_target[1:0] != 2'b00);
@@ -305,7 +305,7 @@ module cpu_core(
     wire csr_ex_load_use_hazard = id_csr_use_rs1 && if_id_valid && (id_ex_valid &&
                                 id_ex_is_load) && (id_ex_rd_addr != 5'b0) &&
                                 (id_ex_rd_addr == id_rs1_addr);
-    wire csr_mem_load_use_hazard = id_csr_use_rs1 && if_id_valid && !id_ex_valid &&
+    wire csr_mem_load_use_hazard = id_csr_use_rs1 && if_id_valid &&
                                     (ex_mem_valid && ex_mem_is_load) &&
                                     (ex_mem_rd_addr != 5'b0) && (ex_mem_rd_addr == id_rs1_addr);
     always @(*) begin
@@ -515,8 +515,8 @@ module cpu_core(
     // 而 ID/EX 原本锁存的 a2 可能还是旧值；停顿时保存旁路值，供 lw 下一拍算地址
     // 指令离开 ID/EX（!stall_ex）或被 flush 时，清除 latest_rs1_valid
     wire [31:0] ex_mem_fwd_data = ex_mem_is_csr ? ex_mem_csr_r_data :
-                                fwd_jump_or_reg ? ex_mem_pc + 32'd4 :
-                                ex_mem_alu_result;
+                                    fwd_jump_or_reg ? ex_mem_pc + 32'd4 :
+                                    ex_mem_alu_result;
     reg [31:0] latest_rs1_data;
     reg latest_rs1_valid;
     always @(posedge clk or negedge rst_n) begin
@@ -532,6 +532,21 @@ module cpu_core(
             latest_rs1_valid <= 1'b1;
         end
     end
+    reg [31:0] latest_rs2_data;
+    reg latest_rs2_valid;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            latest_rs2_valid <= 1'b0;
+        end else if (!stall_ex || id_ex_flush) begin
+            latest_rs2_valid <= 1'b0;
+        end else if (ex_fwd_rs2) begin
+            latest_rs2_data <= ex_mem_fwd_data;
+            latest_rs2_valid <= 1'b1;
+        end else if (wb_fwd_rs2) begin
+            latest_rs2_data <= wb_wr_data;
+            latest_rs2_valid <= 1'b1;
+        end
+    end
     always @(*)begin
         case({ex_fwd_rs1,wb_fwd_rs1})
             2'b01 : op1 = wb_wr_data;
@@ -539,18 +554,16 @@ module cpu_core(
             //3'b111,3'b110 : op1 = mem_ram_r_data;
             default : op1 = (id_ex_alu_src_op1 == 2'b00) ?
                             (latest_rs1_valid ? latest_rs1_data : id_ex_rs1_data) :
-                        (id_ex_alu_src_op1== 2'b01) ? 32'b0 :
-                        id_ex_pc;
+                            (id_ex_alu_src_op1== 2'b01) ? 32'b0 : id_ex_pc;
         endcase
     end
     always @(*)begin
         case({ex_fwd_rs2,wb_fwd_rs2})
             2'b01 : op2 = wb_wr_data;
-            2'b11,2'b10 : op2 = (ex_mem_is_csr)? ex_mem_csr_r_data :
-                                    (fwd_jump_or_reg) ? ex_mem_pc + 32'd4 :
-                                    ex_mem_alu_result;
+            2'b11,2'b10 : op2 = ex_mem_fwd_data;
             //3'b111,3'b110 : op2 = mem_ram_r_data;
-            default : op2 = (id_ex_alu_src_op2)? id_ex_imm : id_ex_rs2_data;
+            default : op2 = (id_ex_alu_src_op2)? id_ex_imm :
+                            (latest_rs2_valid ? latest_rs2_data : id_ex_rs2_data);
         endcase
     end
 
@@ -665,6 +678,8 @@ module cpu_core(
     mmio_decode u_mmio_decode(
         .clk                 (clk),
         .rst_n               (rst_n),
+        .ex_mem_is_load(ex_mem_is_load),
+        .ex_mem_is_store(ex_mem_is_store),
         .ex_mem_valid        (ex_mem_valid),
         .mem_ram_s_we        (mem_ram_s_we),
         .ex_addr_result      (ex_addr_result),

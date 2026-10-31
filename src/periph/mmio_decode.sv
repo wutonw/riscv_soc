@@ -1,6 +1,8 @@
 module mmio_decode(
     input  logic        clk,
     input  logic        rst_n,
+    input logic ex_mem_is_load,
+    input logic ex_mem_is_store,
     input  logic        ex_mem_valid,
 
     input  logic [3:0]  mem_ram_s_we,
@@ -48,8 +50,7 @@ module mmio_decode(
     wire [31:0] ram_raw_r_data;
 
     wire is_ram = (ex_mem_alu_result < 32'h00008000);
-    wire is_uart = (ex_mem_alu_result == 32'h0001_0000) && (mem_ram_s_we[0]);
-    wire is_axi = !is_ram && !is_uart;
+    wire is_axi = !is_ram && (ex_mem_is_load || ex_mem_is_store);
 
     ram u_ram(
         .clk       (clk),
@@ -72,6 +73,7 @@ module mmio_decode(
 
     assign cpu_req = is_axi && ex_mem_valid;
     assign cpu_we = (mem_ram_s_we != 4'b0);
+    assign cpu_addr = ex_mem_alu_result;
     assign cpu_wdata = mem_ram_w_data;
     assign cpu_wstrb = mem_ram_s_we;
     axi_lite_master u_axi_lite_master(

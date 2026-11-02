@@ -14,7 +14,6 @@ module uart_top#(
     output logic      tx_full
 );
 
-    logic tx_full;
     logic tx_empty;
     logic tx_accept;
     logic [7:0] tx_rd_data;

@@ -7,18 +7,21 @@ module uart_top#(
     
     input  logic [7:0] tx_w_data,
     input  logic       tx_wr_en,
+    output logic      tx_full,
+    
+    output logic [7:0] rx_rd_data,
+    input logic rx_rd_en,
+    output logic rx_empty,
 
     output logic       uart_tx,
     input  logic       uart_rx,
-
-    output logic      tx_full
 );
 
     logic tx_empty;
     logic tx_accept;
     logic [7:0] tx_rd_data;
 
-    //tx2
+    //tx
     sync_fifo #(
         .DATA_WIDTH(8),
         .FIFO_DEPTH(128)
@@ -67,10 +70,10 @@ module uart_top#(
         .rst_n  (rst_n),
         .wr_en  (rx_done),
         .wr_data(rx_data),
-        .rd_en  (),
-        .rd_data(),
+        .rd_en  (rx_rd_en),
+        .rd_data(rx_rd_data),
         .full   (),
-        .empty  ()
+        .empty  (rx_empty)
     );
 
 endmodule

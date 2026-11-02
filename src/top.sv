@@ -13,7 +13,8 @@ module top #(
     input  logic clk,
     output logic led,
 
-    output logic tx
+    output logic uart_tx,
+    input logic uart_rx
 );
     logic rst_n;
     logic cpu_clk;
@@ -41,10 +42,11 @@ module top #(
     soc_top #(
         .ROM_FILE(ROM_FILE)
     ) u_soc_top (
-        .cpu_clk(cpu_clk),
+        .cpu_clk  (cpu_clk),
         .cpu_rst_n(cpu_rst_n),
-        .tx(tx),
-        .pc(pc)
+        .uart_tx       (uart_tx),
+        .uart_rx(uart_rx),
+        .pc       (pc)
     );
     // Assert reset immediately on reset/lock loss; release on CPU clock edges.
     always_ff @(posedge cpu_clk or negedge cpu_reset_ready) begin

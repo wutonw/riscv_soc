@@ -1,10 +1,11 @@
 module soc_top #(
     parameter ROM_FILE = "firmware/board_coremark/board_coremark.hex"
 )(
-    input logic cpu_clk,
-    input logic cpu_rst_n,
+    input  logic        cpu_clk,
+    input  logic        cpu_rst_n,
 
-    output logic tx,
+    output logic        uart_tx,
+    input logic uart_rx,
     output logic [31:0] pc
 );
 
@@ -15,11 +16,11 @@ module soc_top #(
     assign prom_addr = inst_addr[14:2];
 
     board_stress_rom #(.ROM_FILE(ROM_FILE)) u_instruction_rom (
-            .clk (cpu_clk),
-            .ce  (prom_ce),
-            .addr(prom_addr),
-            .inst(inst)
-        );
+        .clk (cpu_clk),
+        .ce  (prom_ce),
+        .addr(prom_addr),
+        .inst(inst)
+    );
 
     logic axi_stall;
     logic axi_error;
@@ -30,10 +31,7 @@ module soc_top #(
     logic [31:0] cpu_wdata;
     logic [3:0] cpu_wstrb;
     logic [31:0] cpu_rdata;
-    axi_lite_if #(
-        .ADDR_WIDTH(32),
-        .DATA_WIDTH(32)
-    ) axi_bus (
+    axi_lite_if axi_bus (
         .aclk   (cpu_clk),
         .aresetn(cpu_rst_n)
     );
@@ -70,6 +68,7 @@ module soc_top #(
         .cpu_rdata           (cpu_rdata),
         .axi                 (axi_bus)
     );
+
 endmodule
 
 module board_stress_rom #(

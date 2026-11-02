@@ -45,11 +45,4 @@ module mmio_decode(
     assign cpu_wdata = mem_ram_w_data;
     assign cpu_wstrb = mem_ram_s_we;
 
-    // uart_top u_uart_top(
-    //     .clk   (clk),
-    //     .rst_n (rst_n),
-    //     .w_data(mem_ram_w_data[7:0]),
-    //     .wr_en (is_uart),
-    //     .tx    (tx)
-    // );
 endmodule
